@@ -5,3 +5,8 @@ terraform {
     }
   }
 }
+
+resource "azurerm_resource_group" "system" {
+  name     = "system"
+  location = "eastus"
+}
