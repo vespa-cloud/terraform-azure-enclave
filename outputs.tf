@@ -18,9 +18,9 @@ locals {
 }
 
 output "zones" {
-    description = "Available zones are listed at https://cloud.vespa.ai/en/reference/zones.html . You reference a zone with `[environment].[region with - replaced by _]` (e.g `prod.azure_eastus_az1`)."
-    value = {
-        for environment, zones in local.zones_by_env :
-        environment => { for zone in zones : replace(zone.region, "-", "_") => zone }
-    }
+  description = "Available zones are listed at https://cloud.vespa.ai/en/reference/zones.html . You reference a zone with `[environment].[region with - replaced by _]` (e.g `prod.azure_eastus_az1`)."
+  value = {
+    for environment, zones in local.zones_by_env :
+    environment => { for zone in zones : replace(zone.region, "-", "_") => zone }
+  }
 }

@@ -9,7 +9,17 @@ terraform {
   }
 }
 
+locals {
+  main_region = "eastus"
+}
+
 resource "azurerm_resource_group" "system" {
   name     = "system"
-  location = "eastus"
+  location = local.main_region
+}
+
+resource "azurerm_user_assigned_identity" "identity" {
+  location            = local.main_region
+  name                = "id-tenant"
+  resource_group_name = azurerm_resource_group.system.name
 }
