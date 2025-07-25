@@ -1,4 +1,4 @@
-variable "vespa_cloud_subscription" {
+variable "subscription" {
   description = "Azure subscription ID dedicated to Vespa Cloud Enclave"
   type        = string
 }
