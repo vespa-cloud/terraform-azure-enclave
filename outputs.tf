@@ -5,7 +5,7 @@ locals {
     zone.environment => merge(
       {
         // The name of the Vespa Cloud zone, e.g. "prod.azure-eastus-az1"
-        name             = "${zone.environment}.azure-${zone.physical_zone}",
+        name = "${zone.environment}.azure-${zone.physical_zone}",
         // The short name of the Vespa Cloud zone, used e.g. in hostnames
         short_name       = "${zone.environment}.${zone.physical_zone}",
         region           = "azure-${zone.physical_zone}",
