@@ -1,6 +1,6 @@
 # Vespa Cloud Enclave examples
 
-Here we present to different examples of use of Vespa Cloud Enclave's
+Here we present two different examples of use of Vespa Cloud Enclave's
 Terraform modules.
 
 [`basic`](./basic/)
