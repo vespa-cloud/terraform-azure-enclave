@@ -17,13 +17,14 @@ variable "network_ipv4_cidr" {
     default     = "10.128.0.0/16"
     validation {
         condition = (
-                # Valid CIDR (otherwise throw), and within 10.0.0.0/8
                 startswith(cidrsubnet(var.network_ipv4_cidr, 0, 0), "10.") &&
-                # Prefix length is 16
-                try(tonumber(element(split("/", var.network_ipv4_cidr), 1)) == 16, false)
+                try(
+                    tonumber(element(split("/", var.network_ipv4_cidr), 1)) >= 16 &&
+                    tonumber(element(split("/", var.network_ipv4_cidr), 1)) <= 20,
+                    false)
         )
 
-        error_message = "CIDR for the IPv4 zone network must be /16 and must be within 10.0.0.0/8"
+        error_message = "CIDR for the IPv4 zone network must have a prefix length between /16 and /20, and within 10.0.0.0/8"
     }
 }
 
