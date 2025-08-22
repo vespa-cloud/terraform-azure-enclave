@@ -19,7 +19,7 @@ resource "azurerm_virtual_network" "zone" {
 
   subnet {
     name              = "subnet-tenant"
-    address_prefixes  = [cidrsubnet(var.network_ipv4_cidr, 1, 1), cidrsubnet(var.network_ipv6_cidr, 16, 2)]
+    address_prefixes  = [local.tenant_network_ipv4, local.tenant_network_ipv6]
     service_endpoints = ["Microsoft.Storage"]
     security_group    = azurerm_network_security_group.main.id
   }
@@ -82,6 +82,18 @@ resource "azurerm_network_security_group" "main" {
     source_port_range          = "*"
     destination_address_prefix = "VirtualNetwork"
     destination_port_range     = "51820"
+  }
+
+  security_rule {
+    priority                   = 130
+    name                       = "in-bastion"
+    direction                  = "Inbound"
+    protocol                   = "Tcp"
+    access                     = "Allow"
+    source_address_prefix      = local.bastion_network_ipv4
+    source_port_range          = "*"
+    destination_address_prefix = "VirtualNetwork"
+    destination_port_range     = "22"
   }
 
   tags = {
