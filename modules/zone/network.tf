@@ -23,6 +23,14 @@ resource "azurerm_virtual_network" "zone" {
     service_endpoints = ["Microsoft.Storage"]
     security_group    = azurerm_network_security_group.main.id
   }
+
+  subnet {
+    #checkov:skip=CKV2_AZURE_31: Not needed (https://learn.microsoft.com/en-us/answers/questions/531182/nsg-required-for-bastion-subnet)
+    name                 = local.bastion_subnet_name
+    address_prefixes     = [local.bastion_network_ipv4]
+    service_endpoints = ["Microsoft.Storage"]
+    security_group = azurerm_network_security_group.bastion.id
+  }
 }
 
 resource "azurerm_public_ip" "natgw" {
