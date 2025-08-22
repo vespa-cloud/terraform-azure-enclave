@@ -3,6 +3,7 @@ variable "subscription" {
   type        = string
 }
 
+// This variable is used by Vespa.ai internally for testing and development purposes.
 variable "all_zones" {
   description = "All Azure Vespa Cloud zones"
   type = list(object({

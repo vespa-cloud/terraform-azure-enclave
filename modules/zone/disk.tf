@@ -1,5 +1,9 @@
 data "azurerm_client_config" "current" {}
 
+locals {
+  effective_key_officers = length(var.key_officers) > 0 ? var.key_officers : [data.azurerm_client_config.current.object_id]
+}
+
 resource "random_string" "disk" {
   length  = 6
   special = false
@@ -40,7 +44,7 @@ resource "azurerm_key_vault_key" "disk" {
   tags = {
     zone = var.zone.name
   }
-  depends_on = [azurerm_role_assignment.terraform]
+  depends_on = [azurerm_role_assignment.disk_officer]
 }
 resource "azurerm_disk_encryption_set" "disk" {
   name                      = "disk-encryption"
@@ -56,10 +60,11 @@ resource "azurerm_disk_encryption_set" "disk" {
     zone = var.zone.name
   }
 }
-resource "azurerm_role_assignment" "terraform" {
+resource "azurerm_role_assignment" "disk_officer" {
+  for_each             = toset(local.effective_key_officers)
   scope                = azurerm_key_vault.disk.id
   role_definition_name = "Key Vault Crypto Officer"  # Or "Key Vault Administrator"
-  principal_id         = data.azurerm_client_config.current.object_id
+  principal_id         = each.value
 }
 resource "azurerm_role_assignment" "disk" {
   scope                = azurerm_key_vault.disk.id

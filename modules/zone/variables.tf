@@ -58,6 +58,12 @@ variable "enable_ssh" {
     default     = false
 }
 
+variable "key_officers" {
+    description = "Azure principal IDs of key vault officers, e.g. for disk encryption"
+    type        = list(string)
+    default     = [] // Empty list => current user is key officer
+}
+
 locals {
     // Example for CIDR 10.128.0.0/16.  The first 16 bits defines the network prefix,
     // and the remaining bits will be used as follows:
