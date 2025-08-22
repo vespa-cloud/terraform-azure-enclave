@@ -1,22 +1,6 @@
 
 locals {
-  subnet_name = "AzureBastionSubnet"
-}
-
-resource "azurerm_virtual_network" "bastion" {
-  count = var.enable_ssh ? 1 : 0
-  name                = "bastion"
-  address_space       = [local.bastion_network_ipv4]
-  location            = azurerm_resource_group.zone.location
-  resource_group_name = azurerm_resource_group.zone.name
-
-  subnet {
-    #checkov:skip=CKV2_AZURE_31: Not needed (https://learn.microsoft.com/en-us/answers/questions/531182/nsg-required-for-bastion-subnet)
-    name                 = local.subnet_name
-    address_prefixes     = [local.bastion_network_ipv4]
-    service_endpoints = ["Microsoft.Storage"]
-    security_group = azurerm_network_security_group.bastion[0].id
-  }
+  bastion_subnet_name = "AzureBastionSubnet"
 }
 
 resource "azurerm_public_ip" "bastion" {
@@ -38,13 +22,14 @@ resource "azurerm_bastion_host" "bastion" {
 
   ip_configuration {
     name                 = "configuration"
-    subnet_id            =  "${azurerm_virtual_network.bastion[0].id}/subnets/${local.subnet_name}"
+    subnet_id            =  "${azurerm_virtual_network.zone.id}/subnets/${local.bastion_subnet_name}"
     public_ip_address_id = azurerm_public_ip.bastion[0].id
   }
 }
 
 resource "azurerm_network_security_group" "bastion" {
-  count = var.enable_ssh ? 1 : 0
+  // This resource must be created since it is referenced by the subnet inlined in the virtual network
+  // count = var.enable_ssh ? 1 : 0
   name                = "nsg-bastion"
   resource_group_name = azurerm_resource_group.zone.name
   location            = azurerm_resource_group.zone.location
