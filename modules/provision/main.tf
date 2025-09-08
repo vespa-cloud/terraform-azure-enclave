@@ -75,6 +75,12 @@ resource "azurerm_role_assignment" "provisioner" {
   principal_id       = azurerm_user_assigned_identity.provisioner.principal_id
 }
 
+resource "azurerm_role_assignment" "provisioner_rg_reader" {
+  scope                = azurerm_resource_group.system.id
+  role_definition_name = "Reader"
+  principal_id         = azurerm_user_assigned_identity.provisioner.principal_id
+}
+
 resource "azurerm_user_assigned_identity" "athenz" {
   location            = local.main_region
   name                = "id-athenz"
