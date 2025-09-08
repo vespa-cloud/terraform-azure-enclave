@@ -63,7 +63,7 @@ resource "azurerm_disk_encryption_set" "disk" {
 resource "azurerm_role_assignment" "disk_officer" {
   for_each             = toset(local.effective_key_officers)
   scope                = azurerm_key_vault.disk.id
-  role_definition_name = "Key Vault Crypto Officer"  # Or "Key Vault Administrator"
+  role_definition_name = "Key Vault Crypto Officer" # Or "Key Vault Administrator"
   principal_id         = each.value
 }
 resource "azurerm_role_assignment" "disk" {

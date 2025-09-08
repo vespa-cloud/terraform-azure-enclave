@@ -26,7 +26,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Format
-        run: tofu fmt -check
+        run: tofu fmt -check -recursive .
       - name: Initialize
         run: tofu init -backend=false
       - name: Validate
