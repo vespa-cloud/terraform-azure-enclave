@@ -102,8 +102,8 @@ resource "azurerm_role_definition" "athenz" {
 
 resource "azurerm_role_assignment" "azure" {
   scope              = data.azurerm_subscription.current.id
-  role_definition_id = azurerm_role_definition.azure.role_definition_resource_id
-  principal_id       = azurerm_user_assigned_identity.azure.principal_id
+  role_definition_id = azurerm_role_definition.athenz.role_definition_resource_id
+  principal_id       = azurerm_user_assigned_identity.athenz.principal_id
 }
 
 resource "azurerm_federated_identity_credential" "athenz" {
