@@ -4,7 +4,7 @@
 # your want to provision the Vespa Cloud Enclave.
 #
 variable "subscription_id" {
-  type = string
+  type    = string
   default = "<YOUR-SUBSCRIPTION-ID-HERE>"
 }
 
@@ -13,23 +13,22 @@ provider "azurerm" {
   subscription_id = var.subscription_id
 }
 
-provider "azapi" { }
+provider "azapi" {}
 
 #
 # Set up the basic module that grants Vespa Cloud permission to
 # provision Vespa Cloud resources inside the Azure subscription.
 #
 module "enclave" {
-  source = "github.com/vespa-cloud/terraform-azure-enclave"
-  version     = ">= 1.0.0, < 2.0.0"
-  subscription = var.subscription_id
+  source  = "github.com/vespa-cloud/terraform-azure-enclave"
+  version = ">= 1.0.0, < 2.0.0"
 }
 
 #
 # Set up the VPC that will contain the Enclave Vespa application for the dev environment.
 #
 module "zone_dev_azure_eastus_az1" {
-  source = "github.com/vespa-cloud/terraform-azure//modules/zone"
+  source  = "github.com/vespa-cloud/terraform-azure//modules/zone"
   version = ">= 1.0.0, < 2.0.0"
-  zone = module.enclave.zones.dev.azure_eastus_az1
+  zone    = module.enclave.zones.dev.azure_eastus_az1
 }
