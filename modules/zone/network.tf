@@ -5,7 +5,7 @@ data "azurerm_location" "location" {
 locals {
   // The logical zone ID, e.g. "1"
   logical_zone_id = [for zone_mapping in data.azurerm_location.location.zone_mappings :
-    zone_mapping.logical_zone if zone_mapping.physical_zone == var.zone.physical_zone][0]
+  zone_mapping.logical_zone if zone_mapping.physical_zone == var.zone.physical_zone][0]
 }
 
 resource "azurerm_virtual_network" "zone" {
@@ -26,10 +26,10 @@ resource "azurerm_virtual_network" "zone" {
 
   subnet {
     #checkov:skip=CKV2_AZURE_31: Not needed (https://learn.microsoft.com/en-us/answers/questions/531182/nsg-required-for-bastion-subnet)
-    name                 = local.bastion_subnet_name
-    address_prefixes     = [local.bastion_network_ipv4]
+    name              = local.bastion_subnet_name
+    address_prefixes  = [local.bastion_network_ipv4]
     service_endpoints = ["Microsoft.Storage"]
-    security_group = azurerm_network_security_group.bastion.id
+    security_group    = azurerm_network_security_group.bastion.id
   }
 }
 

@@ -4,7 +4,7 @@ locals {
 }
 
 resource "azurerm_public_ip" "bastion" {
-  count = var.enable_ssh ? 1 : 0
+  count               = var.enable_ssh ? 1 : 0
   name                = "pip-bastion"
   location            = azurerm_resource_group.zone.location
   resource_group_name = azurerm_resource_group.zone.name
@@ -13,7 +13,7 @@ resource "azurerm_public_ip" "bastion" {
 }
 
 resource "azurerm_bastion_host" "bastion" {
-  count = var.enable_ssh ? 1 : 0
+  count               = var.enable_ssh ? 1 : 0
   name                = "bastion"
   location            = azurerm_resource_group.zone.location
   resource_group_name = azurerm_resource_group.zone.name
@@ -22,7 +22,7 @@ resource "azurerm_bastion_host" "bastion" {
 
   ip_configuration {
     name                 = "configuration"
-    subnet_id            =  "${azurerm_virtual_network.zone.id}/subnets/${local.bastion_subnet_name}"
+    subnet_id            = "${azurerm_virtual_network.zone.id}/subnets/${local.bastion_subnet_name}"
     public_ip_address_id = azurerm_public_ip.bastion[0].id
   }
 }

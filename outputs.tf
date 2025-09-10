@@ -1,5 +1,4 @@
 locals {
-  template_version = "0.1.1"
   zones_by_env = {
     for zone in var.all_zones :
     zone.environment => merge(
@@ -7,10 +6,9 @@ locals {
         // The name of the Vespa Cloud zone, e.g. "prod.azure-eastus-az1"
         name = "${zone.environment}.azure-${zone.physical_zone}",
         // The short name of the Vespa Cloud zone, used e.g. in hostnames
-        short_name       = "${zone.environment}.${zone.physical_zone}",
-        region           = "azure-${zone.physical_zone}",
-        azure_region     = split("-", zone.physical_zone)[0],
-        template_version = local.template_version,
+        short_name   = "${zone.environment}.${zone.physical_zone}",
+        region       = "azure-${zone.physical_zone}",
+        azure_region = split("-", zone.physical_zone)[0],
       },
       zone
     )...
