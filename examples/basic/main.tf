@@ -28,7 +28,7 @@ module "enclave" {
 # Set up the VPC that will contain the Enclave Vespa application for the dev environment.
 #
 module "zone_dev_azure_eastus_az1" {
-  source  = "github.com/vespa-cloud/terraform-azure//modules/zone"
+  source  = "github.com/vespa-cloud/terraform-azure-enclave//modules/zone"
   version = ">= 1.0.0, < 2.0.0"
   zone    = module.enclave.zones.dev.azure_eastus_az1
 }
