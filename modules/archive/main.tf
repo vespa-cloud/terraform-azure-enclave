@@ -38,9 +38,15 @@ resource "azurerm_storage_account" "archive" {
   https_traffic_only_enabled      = true
   min_tls_version                 = "TLS1_2"
   allow_nested_items_to_be_public = false
+  shared_access_key_enabled       = false
 
   blob_properties {
     versioning_enabled = false
+  }
+
+  # System-assigned identity to provide key vault access
+  identity {
+    type = "SystemAssigned"
   }
 
   tags = {
@@ -78,4 +84,70 @@ resource "azurerm_role_assignment" "archive_blob_reader" {
   scope                = azurerm_storage_container.archive.id
   role_definition_name = "Storage Blob Data Reader"
   principal_id         = each.value
+}
+
+# Key vault setup
+resource "azurerm_key_vault" "archive" {
+  name                       = "kv-archive-${var.zone.environment}-${var.zone.region}"
+  resource_group_name        = data.azurerm_resource_group.rg.name
+  location                   = data.azurerm_resource_group.rg.location
+  tenant_id                  = data.azurerm_client_config.current.tenant_id
+  sku_name                   = "standard"
+  soft_delete_retention_days = 90
+  purge_protection_enabled   = true
+
+  tags = {
+    managedby = "vespa-cloud"
+    zone      = var.zone.name
+  }
+}
+
+# Key for archive encryption
+resource "azurerm_key_vault_key" "archive" {
+  name         = "vespa-archive-key-${var.zone.environment}-${var.zone.region}"
+  key_vault_id = azurerm_key_vault.archive.id
+  key_type     = "RSA" # AES-256 (AWS default) is not supported in azure tf
+  key_size     = 4096
+  key_opts     = ["unwrapKey", "wrapKey"]
+
+  rotation_policy {
+    # Expire after two years, notify 30 days before expiry
+    expire_after         = "P2Y"
+    notify_before_expiry = "P30D"
+    # Automatic rotation after 1 year
+    automatic {
+      time_after_creation = "P1Y"
+    }
+  }
+
+  depends_on = [azurerm_key_vault_access_policy.caller]
+}
+
+# Grant caller identity permissions on key
+resource "azurerm_key_vault_access_policy" "caller" {
+  key_vault_id = azurerm_key_vault.archive.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azurerm_client_config.current.object_id
+  key_permissions = [
+    "Get", "List", "Create", "Update", "Delete",
+    "GetRotationPolicy", "SetRotationPolicy"
+  ]
+}
+
+# Grant storage account permissions on key
+resource "azurerm_key_vault_access_policy" "sa" {
+  key_vault_id    = azurerm_key_vault.archive.id
+  tenant_id       = data.azurerm_client_config.current.tenant_id
+  object_id       = azurerm_storage_account.archive.identity[0].principal_id
+  key_permissions = ["Get", "UnwrapKey", "WrapKey"]
+}
+
+# Attach key to storage account
+resource "azurerm_storage_account_customer_managed_key" "example" {
+  storage_account_id = azurerm_storage_account.archive.id
+  key_vault_id       = azurerm_key_vault.archive.id
+  key_name           = azurerm_key_vault_key.archive.name
+  depends_on = [
+    azurerm_key_vault_access_policy.sa
+  ]
 }
