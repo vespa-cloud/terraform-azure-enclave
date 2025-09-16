@@ -22,11 +22,9 @@ resource "random_string" "archive" {
   upper   = false
 }
 
-# Pseudo-random 24-char name ("vespaarchive" + first 6 of subscription + 6 random = 24)
-# Should we use standard noclave setup with 6 random chars only?
+# Random ID name with prefix (standard also for noclave)
 locals {
-  sub_compact6 = substr(replace(lower(data.azurerm_client_config.current.subscription_id), "-", ""), 0, 6)
-  storage_name = "vespaarchive${local.sub_compact6}${random_string.archive.id}"
+  storage_name = "vespaarchive${random_string.archive.id}"
 }
 
 # Storage account (top level wrapper around containers)
