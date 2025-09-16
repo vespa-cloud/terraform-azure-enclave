@@ -75,7 +75,7 @@ resource "azurerm_storage_management_policy" "archive" {
 # Blob reader principals
 resource "azurerm_role_assignment" "archive_blob_reader" {
   for_each             = toset(var.archive_reader_principals)
-  scope                = azurerm_storage_container.archive.resource_manager_id
+  scope                = azurerm_storage_container.archive.id
   role_definition_name = "Storage Blob Data Reader"
   principal_id         = each.value
 }
