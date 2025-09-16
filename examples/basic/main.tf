@@ -20,8 +20,9 @@ provider "azapi" {}
 # provision Vespa Cloud resources inside the Azure subscription.
 #
 module "enclave" {
-  source  = "github.com/vespa-cloud/terraform-azure-enclave"
-  version = ">= 1.0.0, < 2.0.0"
+  source      = "github.com/vespa-cloud/terraform-azure-enclave"
+  version     = ">= 1.0.0, < 2.0.0"
+  tenant_name = var.tenant_name
 }
 
 #
