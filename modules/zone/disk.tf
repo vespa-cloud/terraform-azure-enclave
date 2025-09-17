@@ -21,7 +21,7 @@ resource "azurerm_key_vault" "disk" {
   sku_name                    = "premium"
   enabled_for_disk_encryption = true
   purge_protection_enabled    = true
-  enable_rbac_authorization   = true
+  rbac_authorization_enabled  = true
   tags = {
     zone = var.zone.name
   }
