@@ -151,3 +151,10 @@ resource "azurerm_storage_account_customer_managed_key" "example" {
     azurerm_key_vault_access_policy.sa
   ]
 }
+
+# Grant blob writer permissions on storage container
+resource "azurerm_role_assignment" "archive_blob_writer" {
+  scope                = azurerm_storage_container.archive.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = "<TODO principal id of cluster host role>"
+}
