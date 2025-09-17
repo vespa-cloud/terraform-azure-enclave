@@ -14,11 +14,3 @@ resource "azurerm_resource_group" "zone" {
     type = "zone"
   }
 }
-
-# Add the archive module for this zone
-module "archive" {
-  source                    = "../archive"
-  zone                      = var.zone
-  resource_group_name       = azurerm_resource_group.zone.name
-  archive_reader_principals = []
-}

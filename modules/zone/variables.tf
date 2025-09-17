@@ -63,6 +63,12 @@ variable "key_officers" {
   default     = [] // Empty list => current user is key officer
 }
 
+variable "archive_reader_principals" {
+  description = "List of principal ids granted read access to the archive blob storage"
+  type        = list(string)
+  default     = []
+}
+
 locals {
   // Example for CIDR 10.128.0.0/16.  The first 16 bits defines the network prefix,
   // and the remaining bits will be used as follows:
