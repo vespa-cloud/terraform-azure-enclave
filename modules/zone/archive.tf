@@ -1,21 +1,3 @@
-
-terraform {
-  required_providers {
-    azurerm = {
-      source = "hashicorp/azurerm"
-    }
-    random = {
-      source = "hashicorp/random"
-    }
-  }
-}
-
-data "azurerm_client_config" "current" {}
-
-data "azurerm_resource_group" "rg" {
-  name = var.resource_group_name
-}
-
 resource "random_string" "archive" {
   length  = 6
   special = false
@@ -30,8 +12,8 @@ locals {
 # Storage account (top level wrapper around containers)
 resource "azurerm_storage_account" "archive" {
   name                            = local.storage_name
-  resource_group_name             = data.azurerm_resource_group.rg.name
-  location                        = data.azurerm_resource_group.rg.location
+  resource_group_name             = azurerm_resource_group.zone.name
+  location                        = azurerm_resource_group.zone.location
   account_tier                    = "Standard"
   access_tier                     = "Hot"
   account_replication_type        = "LRS"
@@ -88,9 +70,9 @@ resource "azurerm_role_assignment" "archive_blob_reader" {
 
 # Key vault setup
 resource "azurerm_key_vault" "archive" {
-  name                       = "kv-archive-${var.zone.environment}-${var.zone.region}"
-  resource_group_name        = data.azurerm_resource_group.rg.name
-  location                   = data.azurerm_resource_group.rg.location
+  name                       = "vault-archive"
+  resource_group_name        = azurerm_resource_group.zone.name
+  location                   = azurerm_resource_group.zone.location
   tenant_id                  = data.azurerm_client_config.current.tenant_id
   sku_name                   = "standard"
   soft_delete_retention_days = 90
