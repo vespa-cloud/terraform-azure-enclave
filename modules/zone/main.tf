@@ -3,6 +3,9 @@ terraform {
     azurerm = {
       source = "hashicorp/azurerm"
     }
+    random = {
+      source = "hashicorp/random"
+    }
   }
 }
 
@@ -13,13 +16,4 @@ resource "azurerm_resource_group" "zone" {
     zone = var.zone.name
     type = "zone"
   }
-}
-
-# Add the archive module for this zone
-module "archive" {
-  source                    = "github.com/vespa-cloud/terraform-azure-enclave//modules/archive"
-  version                   = ">= 1.0.0, < 2.0.0"
-  zone                      = var.zone
-  resource_group_name       = azurerm_resource_group.zone.name
-  archive_reader_principals = []
 }

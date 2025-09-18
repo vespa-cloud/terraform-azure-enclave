@@ -10,6 +10,24 @@ variable "zone" {
   })
 }
 
+variable "archive_reader_principals" {
+  description = "List of principal ids granted read access to the archive blob storage"
+  type        = list(string)
+  default     = []
+}
+
+variable "enable_ssh" {
+  description = "Allow Vespa Cloud operators to SSH to VMs"
+  type        = bool
+  default     = false
+}
+
+variable "key_officers" {
+  description = "Azure principal IDs of key vault officers, e.g. for disk encryption"
+  type        = list(string)
+  default     = [] // Empty list => current user is key officer
+}
+
 // An IPv4 CIDR that determines the address space to be used for the Vespa Enclave zone.
 //
 // Example for CIDR 10.128.0.0/16.  The first 16 bits defines the network prefix,
@@ -49,18 +67,6 @@ variable "network_ipv6_cidr" {
 
     error_message = "CIDR for the IPv6 zone network must be a /56 subnet within fd00:0::/32, but not fd00:0::/56."
   }
-}
-
-variable "enable_ssh" {
-  description = "Allow Vespa Cloud operators to SSH to VMs"
-  type        = bool
-  default     = false
-}
-
-variable "key_officers" {
-  description = "Azure principal IDs of key vault officers, e.g. for disk encryption"
-  type        = list(string)
-  default     = [] // Empty list => current user is key officer
 }
 
 locals {
