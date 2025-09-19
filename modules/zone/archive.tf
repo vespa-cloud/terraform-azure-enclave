@@ -134,6 +134,13 @@ resource "azurerm_role_assignment" "archive_storage_encryption_user" {
   principal_id         = azurerm_storage_account.archive.identity[0].principal_id
 }
 
+# Grant blob writer permissions on storage account
+resource "azurerm_role_assignment" "id_tenant_blob_contributor" {
+  scope                = azurerm_storage_account.archive.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = data.azurerm_user_assigned_identity.id_tenant.principal_id
+}
+
 # Attach key to storage account (CMK)
 resource "azurerm_storage_account_customer_managed_key" "example" {
   storage_account_id = azurerm_storage_account.archive.id
@@ -142,11 +149,4 @@ resource "azurerm_storage_account_customer_managed_key" "example" {
   depends_on = [
     azurerm_role_assignment.archive_storage_encryption_user
   ]
-}
-
-# Grant blob writer permissions on storage account
-resource "azurerm_role_assignment" "id_tenant_blob_contributor" {
-  scope                = azurerm_storage_account.archive.id
-  role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = data.azurerm_user_assigned_identity.id_tenant.principal_id
 }
