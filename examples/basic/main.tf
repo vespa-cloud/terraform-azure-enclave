@@ -6,6 +6,11 @@
 provider "azurerm" {
   features {}
   subscription_id = "<YOUR-SUBSCRIPTION-ID-HERE>"
+
+  # Necessary to create the archive Storage Account.
+  # Ensure the principal running Terraform has appropriate RBAC on the storage account
+  # (typically Storage Account Contributor at the account scope).
+  storage_use_azuread = true
 }
 
 provider "azapi" {}

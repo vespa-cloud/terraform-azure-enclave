@@ -69,8 +69,13 @@ resource "azurerm_role_assignment" "archive_blob_reader" {
 }
 
 # Key vault setup
+resource "random_string" "vault" {
+  length  = 6
+  special = false
+  upper   = false
+}
 resource "azurerm_key_vault" "archive" {
-  name                       = "vault-archive"
+  name                       = "vault-archive-${random_string.vault.result}"
   resource_group_name        = azurerm_resource_group.zone.name
   location                   = azurerm_resource_group.zone.location
   tenant_id                  = data.azurerm_client_config.current.tenant_id
@@ -94,43 +99,39 @@ resource "azurerm_key_vault_key" "archive" {
   key_opts     = ["unwrapKey", "wrapKey"]
 
   rotation_policy {
-    # Expire after two years, notify 30 days before expiry
-    expire_after         = "P2Y"
-    notify_before_expiry = "P30D"
-    # Automatic rotation after 1 year
     automatic {
-      time_after_creation = "P1Y"
+      time_before_expiry = "P30D"
     }
+    expire_after         = "P90D"
+    notify_before_expiry = "P29D"
   }
-
-  depends_on = [azurerm_key_vault_access_policy.caller]
+  tags = {
+    zone = var.zone.name
+  }
+  depends_on = [azurerm_role_assignment.archive_crypto_officer]
 }
 
-# Grant caller identity permissions on key
-resource "azurerm_key_vault_access_policy" "caller" {
-  key_vault_id = azurerm_key_vault.archive.id
-  tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = data.azurerm_client_config.current.object_id
-  key_permissions = [
-    "Get", "List", "Create", "Update", "Delete",
-    "GetRotationPolicy", "SetRotationPolicy"
-  ]
+# RBAC: grant key crypto officer rights
+resource "azurerm_role_assignment" "archive_crypto_officer" {
+  for_each             = toset(local.effective_key_officers)
+  scope                = azurerm_key_vault.archive.id
+  role_definition_name = "Key Vault Crypto Officer"
+  principal_id         = each.value
 }
 
-# Grant storage account permissions on key
-resource "azurerm_key_vault_access_policy" "sa" {
-  key_vault_id    = azurerm_key_vault.archive.id
-  tenant_id       = data.azurerm_client_config.current.tenant_id
-  object_id       = azurerm_storage_account.archive.identity[0].principal_id
-  key_permissions = ["Get", "UnwrapKey", "WrapKey"]
+# RBAC: allow storage account managed identity to use (wrap/unwrap) the key
+resource "azurerm_role_assignment" "archive_storage_encryption_user" {
+  scope                = azurerm_key_vault.archive.id
+  role_definition_name = "Key Vault Crypto Service Encryption User"
+  principal_id         = azurerm_storage_account.archive.identity[0].principal_id
 }
 
-# Attach key to storage account
+# Attach key to storage account (CMK)
 resource "azurerm_storage_account_customer_managed_key" "example" {
   storage_account_id = azurerm_storage_account.archive.id
   key_vault_id       = azurerm_key_vault.archive.id
   key_name           = azurerm_key_vault_key.archive.name
   depends_on = [
-    azurerm_key_vault_access_policy.sa
+    azurerm_role_assignment.archive_storage_encryption_user
   ]
 }
