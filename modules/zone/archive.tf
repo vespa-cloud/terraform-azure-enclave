@@ -1,3 +1,11 @@
+
+# Look up user assigned identity for tenant host
+# Depends on "id-tenant" in "system" rg from global parent module
+data "azurerm_user_assigned_identity" "id_tenant" {
+  name                = "id-tenant"
+  resource_group_name = "system"
+}
+
 resource "random_string" "archive" {
   length  = 6
   special = false
@@ -124,6 +132,13 @@ resource "azurerm_role_assignment" "archive_storage_encryption_user" {
   scope                = azurerm_key_vault.archive.id
   role_definition_name = "Key Vault Crypto Service Encryption User"
   principal_id         = azurerm_storage_account.archive.identity[0].principal_id
+}
+
+# Grant blob writer permissions on storage account
+resource "azurerm_role_assignment" "id_tenant_blob_contributor" {
+  scope                = azurerm_storage_account.archive.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = data.azurerm_user_assigned_identity.id_tenant.principal_id
 }
 
 # Attach key to storage account (CMK)
