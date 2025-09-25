@@ -64,6 +64,7 @@ resource "azurerm_role_definition" "provisioner" {
       "Microsoft.Network/loadBalancers/delete",
       "Microsoft.Network/publicIPAddresses/delete",
       "Microsoft.Compute/skus/read",
+      "Microsoft.Storage/storageAccounts/read"
     ]
   }
 }
