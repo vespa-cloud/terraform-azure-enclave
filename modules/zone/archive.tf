@@ -43,6 +43,13 @@ resource "azurerm_storage_account" "archive" {
     managedby = "vespa-cloud"
     zone      = var.zone.name
   }
+
+  # Workaround for an azurerm provider bug causing unnecessary diffs. The provider seems to think
+  # that we are using a legacy inline customer_managed_key block in this storage account resource,
+  # instead of the separate azurerm_storage_account_customer_managed_key resource.
+  lifecycle {
+    ignore_changes = [customer_managed_key]
+  }
 }
 
 # Container (bucket equivalent)
