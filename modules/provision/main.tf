@@ -109,7 +109,7 @@ resource "azurerm_role_assignment" "azure" {
 resource "azurerm_federated_identity_credential" "athenz" {
   name                = "athenz"
   resource_group_name = azurerm_resource_group.system.name
-  issuer              = "https://zts.athenz.vespa-cloud.com:4443/zts/v1"
+  issuer              = var.issuer_url
   audience            = ["api://AzureADTokenExchange"]
   parent_id           = azurerm_user_assigned_identity.athenz.id
   subject             = "athenz.azure:role.azure-client"
@@ -118,7 +118,7 @@ resource "azurerm_federated_identity_credential" "athenz" {
 resource "azurerm_federated_identity_credential" "provisioner" {
   name                = "athenz"
   resource_group_name = azurerm_resource_group.system.name
-  issuer              = "https://zts.athenz.vespa-cloud.com:4443/zts/v1"
+  issuer              = var.issuer_url
   audience            = ["api://AzureADTokenExchange"]
   parent_id           = azurerm_user_assigned_identity.provisioner.id
   subject             = "vespa.tenant.${var.tenant_name}.azure-${data.azurerm_subscription.current.subscription_id}:role.azure.provisioner"

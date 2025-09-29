@@ -22,3 +22,9 @@ variable "all_zones" {
     { environment = "dev", physical_zone = "eastus-az1" },
   ]
 }
+
+variable "issuer_url" {
+  description = "Issuer URL for federated identity credentials (Athenz ZTS)."
+  type        = string
+  default     = "https://zts.athenz.vespa-cloud.com:4443/zts/v1"
+}
