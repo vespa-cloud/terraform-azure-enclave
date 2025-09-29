@@ -115,6 +115,16 @@ resource "azurerm_federated_identity_credential" "athenz" {
   subject             = "athenz.azure:role.azure-client"
 }
 
+# Additional federated credential for Athenz using issuer on port 443 (otherwise identical)
+resource "azurerm_federated_identity_credential" "athenz_443" {
+  name                = "athenz-443"
+  resource_group_name = azurerm_resource_group.system.name
+  issuer              = replace(var.issuer_url, ":4443", ":443")
+  audience            = ["api://AzureADTokenExchange"]
+  parent_id           = azurerm_user_assigned_identity.athenz.id
+  subject             = "athenz.azure:role.azure-client"
+}
+
 resource "azurerm_federated_identity_credential" "provisioner" {
   name                = "athenz"
   resource_group_name = azurerm_resource_group.system.name
