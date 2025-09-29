@@ -14,3 +14,13 @@ variable "all_zones" {
     { environment = "dev", physical_zone = "eastus-az1" },
   ]
 }
+
+variable "athenz_env" {
+  description = "Athenz environment selector for ZTS issuer URL. One of: 'prod', 'cd'."
+  type        = string
+  default     = "prod"
+  validation {
+    condition     = contains(["prod", "cd"], var.athenz_env)
+    error_message = "athenz_env must be either 'prod' or 'cd'"
+  }
+}
