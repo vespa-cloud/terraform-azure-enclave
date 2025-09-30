@@ -149,7 +149,7 @@ resource "azurerm_role_assignment" "id_tenant_blob_contributor" {
 }
 
 # Attach key to storage account (CMK)
-resource "azurerm_storage_account_customer_managed_key" "example" {
+resource "azurerm_storage_account_customer_managed_key" "archive_customer_managed_key" {
   storage_account_id = azurerm_storage_account.archive.id
   key_vault_id       = azurerm_key_vault.archive.id
   key_name           = azurerm_key_vault_key.archive.name
