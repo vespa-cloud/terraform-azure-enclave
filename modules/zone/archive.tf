@@ -113,6 +113,7 @@ resource "azurerm_key_vault" "archive" {
 
 # Key for archive encryption
 resource "azurerm_key_vault_key" "archive" {
+  # checkov:skip=CKV_AZURE_40: Expiration is managed by rotation_policy (expire_after=90d)
   name         = "vespa-archive-key-${var.zone.environment}-${var.zone.region}"
   key_vault_id = azurerm_key_vault.archive.id
   key_type     = "RSA" # AES-256 (AWS default) is not supported in azure tf
