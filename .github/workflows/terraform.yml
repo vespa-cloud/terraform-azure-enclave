@@ -31,3 +31,13 @@ jobs:
         run: tofu init -backend=false
       - name: Validate
         run: tofu validate
+  checkov:
+    name: "Checkov"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Checkov
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          framework: terraform
