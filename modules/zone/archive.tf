@@ -105,6 +105,10 @@ resource "azurerm_key_vault" "archive" {
     managedby = "vespa-cloud"
     zone      = var.zone.name
   }
+  network_acls {
+    default_action = "Deny"
+    bypass = "AzureServices"
+  }
 }
 
 # Key for archive encryption
