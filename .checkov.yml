@@ -27,8 +27,11 @@ quiet: true
 
 skip-check:
 
+  # Storage account
   - CKV_AZURE_33 # Checkov wants the deprecated "queue_properties" block in the storage account resource.
   - CKV_AZURE_206 # Allow LRS (Locally-redundant storage) for enclave storage accounts.
+
+  # Key vault encryption
   - CKV_AZURE_112 # Ensure that key vault key is backed by HSM
 
   # Key vault accessibility - these would restrict where the user can apply the template from.
