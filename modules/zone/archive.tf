@@ -99,7 +99,6 @@ resource "azurerm_key_vault" "archive" {
   soft_delete_retention_days    = 90
   purge_protection_enabled      = true
   enable_rbac_authorization     = true
-  public_network_access_enabled = false
 
   tags = {
     managedby = "vespa-cloud"
