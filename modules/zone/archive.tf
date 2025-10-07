@@ -32,6 +32,9 @@ resource "azurerm_storage_account" "archive" {
   public_network_access_enabled   = false
 
   blob_properties {
+    delete_retention_policy {
+      days = 7
+    }
     versioning_enabled = false
   }
 
