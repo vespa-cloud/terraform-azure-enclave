@@ -1,0 +1,32 @@
+# ---------------------------------------------------------------------------------------------------------------------
+# Scan Config
+# ---------------------------------------------------------------------------------------------------------------------
+download-external-modules: true
+evaluate-variables: true
+skip-path:
+- examples/
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Output Format
+# ---------------------------------------------------------------------------------------------------------------------
+compact: true
+quiet: true
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# Skip Non-security checks to produce high value, low noise findings
+# Skip checks that are not directly security risks like...
+# * S3 bucket versioning
+# * Best practices
+# * High availability
+# * Tagging
+# * Logging
+# * Backups
+# ---------------------------------------------------------------------------------------------------------------------
+
+skip-check:
+
+  - CKV_AZURE_33 # Checkov wants the deprecated "queue_properties" block in the storage account resource.
+  - CKV_AZURE_206 # Allow LRS (Locally-redundant storage) for enclave storage accounts.
+  - CKV_AZURE_112 # Ensure that key vault key is backed by HSM
