@@ -98,7 +98,8 @@ resource "azurerm_key_vault" "archive" {
   sku_name                      = "standard"
   soft_delete_retention_days    = 90
   purge_protection_enabled      = true
-  enable_rbac_authorization     = true
+  # Note: 'enable_rbac_authorization' is deprecated for removal in v5, so don't put it back
+  rbac_authorization_enabled    = true
   public_network_access_enabled = false
 
   tags = {
