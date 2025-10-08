@@ -5,7 +5,7 @@
 #
 provider "azurerm" {
   features {}
-  subscription_id = "<YOUR-SUBSCRIPTION-ID-HERE>"
+  subscription_id = "<YOUR-SUBSCRIPTION-ID>"
 
   # Necessary to create the archive Storage Account.
   # Ensure the principal running Terraform has appropriate RBAC on the storage account
@@ -22,7 +22,7 @@ provider "azapi" {}
 module "enclave" {
   source      = "github.com/vespa-cloud/terraform-azure-enclave"
   version     = ">= 1.0.0, < 2.0.0"
-  tenant_name = "<YOUR-TENANT-NAME-HERE>"
+  tenant_name = "<YOUR-TENANT-NAME>"
 }
 
 #
