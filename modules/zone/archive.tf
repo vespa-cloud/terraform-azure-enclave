@@ -32,6 +32,9 @@ resource "azurerm_storage_account" "archive" {
   public_network_access_enabled   = false
 
   blob_properties {
+    delete_retention_policy {
+      days = 7
+    }
     versioning_enabled = false
   }
 
@@ -98,16 +101,14 @@ resource "azurerm_key_vault" "archive" {
   sku_name                      = "standard"
   soft_delete_retention_days    = 90
   purge_protection_enabled      = true
-  enable_rbac_authorization     = true
-  public_network_access_enabled = false
+  public_network_access_enabled = true
+
+  # Note: 'enable_rbac_authorization' is deprecated for removal in v5, so don't put it back
+  rbac_authorization_enabled = true
 
   tags = {
     managedby = "vespa-cloud"
     zone      = var.zone.name
-  }
-  network_acls {
-    default_action = "Deny"
-    bypass = "AzureServices"
   }
 }
 
