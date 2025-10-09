@@ -48,14 +48,14 @@ provider "azapi" {}
 
 # Bootstrap your subscription for Vespa Cloud
 module "enclave" {
-  source      = "github.com/vespa-cloud/terraform-azure-enclave"
+  source      = "vespa-cloud/enclave/azure"
   version     = ">= 1.0.0, < 2.0.0"
   tenant_name = "<YOUR-TENANT-NAME>"
 }
 
 # Create one Vespa Cloud zone (VNet, subnets, bastion, storage, etc.)
 module "zone_dev_azure_eastus_az1" {
-  source  = "github.com/vespa-cloud/terraform-azure-enclave//modules/zone"
+  source  = "vespa-cloud/enclave/azure//modules/zone"
   version = ">= 1.0.0, < 2.0.0"
   zone    = module.enclave.zones.dev.azure_eastus_az1
 }

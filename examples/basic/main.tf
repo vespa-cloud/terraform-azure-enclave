@@ -20,16 +20,16 @@ provider "azapi" {}
 # provision Vespa Cloud resources inside the Azure subscription.
 #
 module "enclave" {
-  source      = "github.com/vespa-cloud/terraform-azure-enclave"
+  source      = "vespa-cloud/enclave/azure"
   version     = ">= 1.0.0, < 2.0.0"
   tenant_name = "<YOUR-TENANT-NAME>"
 }
 
 #
-# Set up the VPC that will contain the Enclave Vespa application for the dev environment.
+# Set up the VNet that will contain the Enclave Vespa application for the dev environment.
 #
 module "zone_dev_azure_eastus_az1" {
-  source  = "github.com/vespa-cloud/terraform-azure-enclave//modules/zone"
+  source  = "vespa-cloud/enclave/azure//modules/zone"
   version = ">= 1.0.0, < 2.0.0"
   zone    = module.enclave.zones.dev.azure_eastus_az1
 }
