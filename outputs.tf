@@ -1,6 +1,6 @@
 locals {
   zones_by_env = {
-    for zone in var.all_zones :
+    for zone in var.__all_zones :
     zone.environment => merge(
       {
         // The name of the Vespa Cloud zone, e.g. "prod.azure-eastus-az1"
