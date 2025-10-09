@@ -65,8 +65,10 @@ See complete working example in `examples/basic`.
 
 ## Inputs
 - tenant_name (string, required): The Vespa Cloud tenant name that will operate in this subscription.
-- athenz_env (string, optional, default "prod"): Only for internal use. Athenz environment selector for ZTS issuer URL.
-- all_zones (list(object), optional): Only for internal use. Default list of Azure Vespa Cloud zones.
+
+### Internal-use inputs (do not override)
+- athenz_env (string, optional, default "prod"): INTERNAL. Selects the Athenz ZTS issuer URL (one of: "prod", "cd"). Do not override.
+- all_zones (list(object), optional): INTERNAL. Default list of Azure Vespa Cloud zones. Do not override.
 
 ## Outputs
 - zones (map): Map of available Vespa Cloud zones grouped by environment. Keys are referenced as
