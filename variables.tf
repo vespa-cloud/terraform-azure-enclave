@@ -4,7 +4,7 @@ variable "tenant_name" {
 }
 
 // This variable is used by Vespa.ai internally for testing and development purposes.
-variable "all_zones" {
+variable "__all_zones" {
   description = "All Azure Vespa Cloud zones"
   type = list(object({
     environment   = string
@@ -15,12 +15,12 @@ variable "all_zones" {
   ]
 }
 
-variable "athenz_env" {
+variable "__athenz_env" {
   description = "Athenz environment selector for ZTS issuer URL. One of: 'prod', 'cd'."
   type        = string
   default     = "prod"
   validation {
-    condition     = contains(["prod", "cd"], var.athenz_env)
+    condition     = contains(["prod", "cd"], var.__athenz_env)
     error_message = "athenz_env must be either 'prod' or 'cd'"
   }
 }
