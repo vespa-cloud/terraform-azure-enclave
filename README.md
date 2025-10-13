@@ -5,8 +5,19 @@ subscription features required to run Vespa Cloud Enclaves on Azure. It also exp
 supported Vespa Cloud zones so you can create one or more Enclave networks using the provided
 zone submodule.
 
-- Module on the Terraform Registry: https://registry.terraform.io/modules/vespa-cloud/enclave/azure
 - Vespa Cloud documentation: https://cloud.vespa.ai/
+
+## 📦 Module registries
+
+[![Terraform Registry](https://img.shields.io/badge/Terraform%20Registry-vespa--cloud%2Fenclave%2Fazure-623CE4?logo=terraform&logoColor=white)](https://registry.terraform.io/modules/vespa-cloud/enclave/azure)
+[![OpenTofu Registry](https://img.shields.io/badge/OpenTofu%20Registry-vespa--cloud%2Fenclave%2Fazure-FFDA18?logo=opentofu&logoColor=white)](https://search.opentofu.org/module/vespa-cloud/enclave/azure)
+
+This module is published on both the Terraform and OpenTofu registries.
+
+- Module address (both): `vespa-cloud/enclave/azure`
+- Terraform Registry: https://registry.terraform.io/modules/vespa-cloud/enclave/azure
+- OpenTofu Registry: https://search.opentofu.org/module/vespa-cloud/enclave/azure
+
 
 ## What this module sets up
 - A `system` resource group to host identities used by Vespa Cloud
