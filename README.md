@@ -5,8 +5,19 @@ subscription features required to run Vespa Cloud Enclaves on Azure. It also exp
 supported Vespa Cloud zones so you can create one or more Enclave networks using the provided
 zone submodule.
 
-- Module on the Terraform Registry: https://registry.terraform.io/modules/vespa-cloud/enclave/azure
-- Vespa Cloud documentation: https://cloud.vespa.ai/
+See Vespa Cloud documentation: https://cloud.vespa.ai/
+
+## 📦 Module registries
+
+[![Terraform Registry](https://img.shields.io/badge/Terraform%20Registry-vespa--cloud%2Fenclave%2Fazure-623CE4?logo=terraform&logoColor=white)](https://registry.terraform.io/modules/vespa-cloud/enclave/azure)
+[![OpenTofu Registry](https://img.shields.io/badge/OpenTofu%20Registry-vespa--cloud%2Fenclave%2Fazure-FFDA18?logo=opentofu&logoColor=white)](https://search.opentofu.org/module/vespa-cloud/enclave/azure)
+
+This module is published on both the Terraform and OpenTofu registries.
+
+- Module address (both): `vespa-cloud/enclave/azure`
+- Terraform Registry: https://registry.terraform.io/modules/vespa-cloud/enclave/azure
+- OpenTofu Registry: https://search.opentofu.org/module/vespa-cloud/enclave/azure
+
 
 ## What this module sets up
 - A `system` resource group to host identities used by Vespa Cloud
@@ -17,7 +28,7 @@ zone submodule.
 - Registration of the `EncryptionAtHost` feature in the subscription
 
 Networking (VNet, subnets, bastion, storage for archives/disks, etc.) is created per-zone via
-the `modules/zone` submodule once the root module has been applied.
+the `modules/zone` submodule after the root module has been applied.
 
 ## Requirements
 - Terraform >= 1.3
@@ -97,8 +108,8 @@ stable API and may change without notice.
 ## Permissions needed by the Terraform runner
 The principal running Terraform must be able to create custom role definitions and assignments at the
 subscription scope, managed identities, resource groups, and register features. For provisioning
-resources in zone submodules the principal must have Storage Account Contributor on the created 
-storage accounts.
+resources in zone submodules, ensure the principal has data-plane RBAC such as `Storage Account Contributor`
+on the created storage accounts.
 
 Option A (simplest for bootstrap):
 - `Owner` @ subscription
