@@ -22,3 +22,13 @@ output "zones" {
     environment => { for zone in zones : replace(zone.region, "-", "_") => zone }
   }
 }
+
+data "azurerm_subscription" "current" {}
+
+output "enclave_config" {
+  value = {
+    "client_id" : module.provision.client_id,
+    "subscription_id" : data.azurerm_subscription.current.subscription_id,
+    "tenant_id" : data.azurerm_subscription.current.tenant_id
+  }
+}
