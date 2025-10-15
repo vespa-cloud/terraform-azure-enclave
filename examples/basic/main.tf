@@ -33,3 +33,7 @@ module "zone_dev_azure_eastus_az1" {
   version = ">= 1.0.0, < 2.0.0"
   zone    = module.enclave.zones.dev.azure_eastus_az1
 }
+
+output "enclave_config" {
+  value = module.enclave.enclave_config
+}

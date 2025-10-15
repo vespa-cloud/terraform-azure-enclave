@@ -70,6 +70,10 @@ module "zone_dev_azure_eastus_az1" {
   version = ">= 1.0.0, < 2.0.0"
   zone    = module.enclave.zones.dev.azure_eastus_az1
 }
+
+output "enclave_config" {
+  value = module.enclave.enclave_config
+}
 ```
 
 See complete working example in `examples/basic`.
@@ -85,6 +89,11 @@ Internal inputs (prefixed with double underscores) are not part of the public,
 stable API and may change without notice.
 
 ## Outputs
+- enclave_config (map): Map of various properties that must be shared with Vespa team to finalize enclave setup. Propagate this result
+  up to the root module for easy access to its values. Print the output with
+  ```
+  terraform output enclave_config
+  ```
 - zones (map): Map of available Vespa Cloud zones grouped by environment. Keys are referenced as
   `[environment].[region with - replaced by _]`, for example: `prod.azure_eastus_az1` or `dev.azure_eastus_az1`.
   Each zone object contains:

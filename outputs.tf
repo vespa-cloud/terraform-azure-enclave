@@ -25,14 +25,10 @@ output "zones" {
 
 data "azurerm_subscription" "current" {}
 
-output "client_id" {
-  value = module.provision.client_id
-}
-
-output "subscription_id" {
-  value = data.azurerm_subscription.current.subscription_id
-}
-
-output "tenant_id" {
-  value = data.azurerm_subscription.current.tenant_id
+output "enclave_config" {
+  value = {
+    "client_id" : module.provision.client_id,
+    "subscription_id" : data.azurerm_subscription.current.subscription_id,
+    "tenant_id" : data.azurerm_subscription.current.tenant_id
+  }
 }
