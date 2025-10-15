@@ -140,3 +140,7 @@ resource "azapi_resource_action" "enable_encryption_at_host" {
   action      = "/providers/Microsoft.Features/providers/Microsoft.Compute/features/EncryptionAtHost/register"
   body        = {}
 }
+
+output "client_id" {
+  value = azurerm_user_assigned_identity.athenz.client_id
+}

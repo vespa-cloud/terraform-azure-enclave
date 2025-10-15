@@ -22,3 +22,17 @@ output "zones" {
     environment => { for zone in zones : replace(zone.region, "-", "_") => zone }
   }
 }
+
+data "azurerm_subscription" "current" {}
+
+output "client_id" {
+  value = module.provision.client_id
+}
+
+output "subscription_id" {
+  value = data.azurerm_subscription.current.subscription_id
+}
+
+output "tenant_id" {
+  value = data.azurerm_subscription.current.tenant_id
+}
