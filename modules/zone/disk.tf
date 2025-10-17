@@ -1,5 +1,3 @@
-data "azurerm_client_config" "current" {}
-
 locals {
   effective_key_officers = length(var.key_officers) > 0 ? var.key_officers : [data.azurerm_client_config.current.object_id]
 }
