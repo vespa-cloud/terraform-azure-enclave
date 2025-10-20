@@ -16,16 +16,17 @@ locals {
 }
 
 output "zones" {
-  description = "Available zones are listed at https://cloud.vespa.ai/en/reference/zones.html . You reference a zone with `[environment].[region with - replaced by _]` (e.g `prod.azure_eastus_az1`)."
+  description = "Map of available Vespa Cloud zones grouped by environment. Available zones are listed at https://cloud.vespa.ai/en/reference/zones.html. Reference a zone with `[environment].[region with - replaced by _]` (e.g. `prod.azure_eastus_az1`)."
   value = {
     for environment, zones in local.zones_by_env :
-    environment => { for zone in zones : replace(zone.region, "-", "_") => zone }
+    environment => { for z in zones : replace(z.region, "-", "_") => z }
   }
 }
 
 data "azurerm_subscription" "current" {}
 
 output "enclave_config" {
+  description = "Configuration values that must be shared with the Vespa team to finalize the enclave setup: Azure AD application (client) id for Athenz, subscription id and tenant id."
   value = {
     "client_id" : module.provision.client_id,
     "subscription_id" : data.azurerm_subscription.current.subscription_id,

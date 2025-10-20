@@ -4,7 +4,8 @@ variable "tenant_name" {
 }
 
 variable "template_version" {
-  type = string
+  description = "Internal: Version string of this template in MAJOR.MINOR.PATCH format."
+  type        = string
   validation {
     condition     = can(regex("^\\d+\\.\\d+\\.\\d+$", var.template_version))
     error_message = "Enclave template version expected to be in MAJOR.MINOR.PATCH format."

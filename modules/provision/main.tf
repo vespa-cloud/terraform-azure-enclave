@@ -142,5 +142,6 @@ resource "azapi_resource_action" "enable_encryption_at_host" {
 }
 
 output "client_id" {
-  value = azurerm_user_assigned_identity.athenz.client_id
+  description = "Azure AD application (client) id of the user-assigned managed identity used by Athenz."
+  value       = azurerm_user_assigned_identity.athenz.client_id
 }

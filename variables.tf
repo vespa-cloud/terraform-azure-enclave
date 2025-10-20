@@ -1,11 +1,11 @@
 variable "tenant_name" {
-  description = "The tenant owner running enclave account"
+  description = "The Vespa Cloud tenant name that will operate in this subscription."
   type        = string
 }
 
 // This variable is used by Vespa.ai internally for testing and development purposes.
 variable "__all_zones" {
-  description = "All Azure Vespa Cloud zones"
+  description = "Internal: Default list of Azure Vespa Cloud zones. Do not override."
   type = list(object({
     environment   = string
     physical_zone = string
@@ -16,7 +16,7 @@ variable "__all_zones" {
 }
 
 variable "__athenz_env" {
-  description = "Athenz environment selector for ZTS issuer URL. One of: 'prod', 'cd'."
+  description = "Internal: Selects the Athenz ZTS issuer URL (one of: \"prod\", \"cd\"). Do not override."
   type        = string
   default     = "prod"
   validation {
