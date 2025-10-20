@@ -3,8 +3,9 @@ variable "tenant_name" {
   type        = string
 }
 
+// Version string of this template in MAJOR.MINOR.PATCH format.
 variable "template_version" {
-  description = "Internal: Version string of this template in MAJOR.MINOR.PATCH format."
+  description = "Internal, do not override."
   type        = string
   validation {
     condition     = can(regex("^\\d+\\.\\d+\\.\\d+$", var.template_version))
@@ -12,9 +13,9 @@ variable "template_version" {
   }
 }
 
-// This variable is used by Vespa.ai internally for testing and development purposes.
+// See variables.tf in root module
 variable "all_zones" {
-  description = "All Azure Vespa Cloud zones"
+  description = "Internal, do not override."
   type = list(object({
     environment   = string
     physical_zone = string
@@ -24,8 +25,9 @@ variable "all_zones" {
   ]
 }
 
+// See variables.tf in root module
 variable "issuer_url" {
-  description = "Issuer URL for federated identity credentials (Athenz ZTS)."
+  description = "Internal, do not override."
   type        = string
   default     = "https://zts.athenz.vespa-cloud.com:4443/zts/v1"
 }

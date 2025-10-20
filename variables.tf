@@ -3,9 +3,9 @@ variable "tenant_name" {
   type        = string
 }
 
-// This variable is used by Vespa.ai internally for testing and development purposes.
+// Default list of Azure Vespa Cloud zones, used for testing and development.
 variable "__all_zones" {
-  description = "Internal: Default list of Azure Vespa Cloud zones. Do not override."
+  description = "Internal, do not override."
   type = list(object({
     environment   = string
     physical_zone = string
@@ -15,8 +15,9 @@ variable "__all_zones" {
   ]
 }
 
+// Issuer (Athenz ZTS) URL for federated identity credentials (either 'prod' or 'cd').
 variable "__athenz_env" {
-  description = "Internal: Selects the Athenz ZTS issuer URL (one of: \"prod\", \"cd\"). Do not override."
+  description = "Internal, do not override."
   type        = string
   default     = "prod"
   validation {
