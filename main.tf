@@ -13,7 +13,7 @@ locals {
   # NOTE: Do not rename or move this variable!
   # This is used by github actions to tag releases. Bump whenever making non-trivial changes.
   # To skip tagging for minor changes, mark the PR with a 'no-tag' label or start the PR title with 'minor'.
-  template_version = "1.0.2"
+  template_version = "1.0.3"
 
   zts_prod   = "https://zts.athenz.vespa-cloud.com:4443/zts/v1"
   zts_cd     = "https://zts.athenz.cd.vespa-cloud.com:4443/zts/v1"
