@@ -21,4 +21,4 @@ Describe what this PR changes.
 ### Checklist
 - [ ] If regular: bumped `locals.template_version` and verified it’s higher than BOTH `origin/main` and the latest tag.
 - [ ] If minor/no-tag: left `locals.template_version` unchanged and labeled/title-marked the PR.
-- [ ] This PR follows the policy in `.github/CONTRIBUTING.md`.
+- [ ] This PR follows the policy in [CONTRIBUTING.md](./CONTRIBUTING.md).
