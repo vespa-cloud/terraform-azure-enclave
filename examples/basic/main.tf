@@ -42,6 +42,9 @@ module "zone_dev_azure_eastus_az1" {
   source  = "vespa-cloud/enclave/azure//modules/zone"
   version = ">= 1.0.0, < 2.0.0"
   zone    = module.enclave.zones.dev.azure_eastus_az1
+
+  # Used internally to grant archive write permissions.
+  __archive_writer_role = module.enclave.__archive_writer_role_id
 }
 
 output "enclave_config" {
