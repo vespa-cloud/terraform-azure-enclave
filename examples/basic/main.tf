@@ -1,3 +1,13 @@
+terraform {
+  required_providers {
+    azapi = {
+      source = "azure/azapi"
+    }
+    azurerm = {
+      source = "hashicorp/azurerm"
+    }
+  }
+}
 
 #
 # Set up the Azure Terraform Provider to point to the Azure subscription where
