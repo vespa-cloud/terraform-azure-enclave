@@ -109,10 +109,12 @@ stable API and may change without notice.
 ## Resources created (high level)
 - azurerm_resource_group.system (name: `system`)
 - azurerm_user_assigned_identity: `id-tenant`, `id-provisioner`, `id-athenz`
-- azurerm_role_definition: `provisioner`, `athenz`
+- azurerm_role_definition: `provisioner`, `athenz`, `archive-writer-no-delete-${subscription_id}`
 - azurerm_role_assignment for the above roles at subscription and resource group scopes
 - azurerm_federated_identity_credential for Athenz and provisioner
 - azapi_resource_action to register `Microsoft.Compute/features/EncryptionAtHost`
+
+Note: Custom role names in Azure are unique per Microsoft Entra directory (tenant), hence the subscription-id suffix.
 
 ## Permissions needed by the Terraform runner
 The principal running Terraform must be able to create custom role definitions and assignments at the

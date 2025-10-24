@@ -134,6 +134,40 @@ resource "azurerm_federated_identity_credential" "provisioner" {
   subject             = "vespa.tenant.${var.tenant_name}.azure-${data.azurerm_subscription.current.subscription_id}:role.azure.provisioner"
 }
 
+# Custom role for archive storage accounts to allow blob write without delete.
+# Role names must be unique tenant-wide, so we include the subscription id.
+# Used by each zone's archive storage account
+resource "azurerm_role_definition" "archive_writer_no_delete" {
+  name        = "archive-writer-no-delete-${data.azurerm_subscription.current.subscription_id}"
+  scope       = data.azurerm_subscription.current.id
+  description = "Allows writing archive blobs, without delete permissions."
+
+  permissions {
+    actions = [
+      "Microsoft.Storage/storageAccounts/blobServices/containers/read",
+      "Microsoft.Storage/storageAccounts/blobServices/containers/write",
+    ]
+    data_actions = [
+      "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/read",
+      "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/write",
+      "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/move/action",
+      "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/add/action",
+    ]
+
+    # Explicitly block delete actions, in case we use wildcard permissions in the future
+    not_actions = [
+      "Microsoft.Storage/storageAccounts/blobServices/containers/delete",
+    ]
+    not_data_actions = [
+      "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/delete"
+    ]
+  }
+
+  assignable_scopes = [
+    data.azurerm_subscription.current.id
+  ]
+}
+
 resource "azapi_resource_action" "enable_encryption_at_host" {
   type        = "Microsoft.Resources/subscriptions@2021-07-01"
   resource_id = "/subscriptions/${data.azurerm_subscription.current.subscription_id}"
