@@ -149,43 +149,10 @@ resource "azurerm_role_assignment" "archive_storage_encryption_user" {
   principal_id         = azurerm_storage_account.archive.identity[0].principal_id
 }
 
-# Create a custom role to write archive files to storage blob, without delete permissions
-resource "azurerm_role_definition" "storage_blob_writer_no_delete" {
-  name        = "Storage Blob Data Writer (No Delete)"
-  scope       = "/subscriptions/${data.azurerm_client_config.current.subscription_id}"
-  description = "Allows writing archive blobs, without delete permissions."
-
-  permissions {
-    actions = []
-
-    data_actions = [
-      # Include all the data actions of the built-in Storage Blob Data Contributor
-      "Microsoft.Storage/storageAccounts/blobServices/containers/read",
-      "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/read",
-      "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/write",
-      "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/add/action",
-      "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/tags/read",
-      "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/tags/write",
-      "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/appendBlob/action",
-      "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/list/action",
-    ]
-
-    not_data_actions = [
-      # Explicitly block delete actions, in case we use wildcard permissions in the future
-      "Microsoft.Storage/storageAccounts/blobServices/containers/delete",
-      "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/delete"
-    ]
-  }
-
-  assignable_scopes = [
-    "/subscriptions/${data.azurerm_client_config.current.subscription_id}"
-  ]
-}
-
 # Grant blob writer permissions on storage account
-resource "azurerm_role_assignment" "id_tenant_blob_writer" {
+resource "azurerm_role_assignment" "id_tenant_archive_writer" {
   scope              = azurerm_storage_account.archive.id
-  role_definition_id = azurerm_role_definition.storage_blob_writer_no_delete.role_definition_resource_id
+  role_definition_id = var.__archive_writer_role
   principal_id       = data.azurerm_user_assigned_identity.id_tenant.principal_id
 }
 

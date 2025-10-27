@@ -15,6 +15,10 @@ locals {
   }
 }
 
+output "__archive_writer_role_id" {
+  value = module.provision.archive_writer_role_id
+}
+
 output "zones" {
   description = "Map of available Vespa Cloud zones grouped by environment. Available zones are listed at https://cloud.vespa.ai/en/reference/zones.html. Reference a zone with `[environment].[region with - replaced by _]` (e.g. `prod.azure_eastus_az1`)."
   value = {

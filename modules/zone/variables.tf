@@ -10,6 +10,11 @@ variable "zone" {
   })
 }
 
+variable "__archive_writer_role" {
+  description = "The custom role definition ID for archive blob storage write access"
+  type        = string
+}
+
 variable "archive_reader_principals" {
   description = "List of principal ids granted read access to the archive blob storage"
   type        = list(string)
