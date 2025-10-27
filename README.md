@@ -69,12 +69,21 @@ module "zone_dev_azure_eastus_az1" {
   source  = "vespa-cloud/enclave/azure//modules/zone"
   version = ">= 1.0.0, < 2.0.0"
   zone    = module.enclave.zones.dev.azure_eastus_az1
+
+  # Used internally to wire resources from the enclave module to the zone module.
+  __enclave_infra = module.enclave.__enclave_infra
+
+  # Allow Vespa Cloud operators to SSH into the provisioned VMs for troubleshooting.
+  #enable_ssh = true
 }
 
 output "enclave_config" {
   value = module.enclave.enclave_config
 }
 ```
+### Optional: enable SSH access in a zone
+Set `enable_ssh = true` (the commented line above) in a zone module block to provision Azure Bastion in that
+zone VNet, giving Vespa Cloud operators secure SSH access for troubleshooting. Default is `false` (no Bastion).
 
 See complete working example in `examples/basic`.
 
