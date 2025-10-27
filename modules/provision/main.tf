@@ -189,8 +189,3 @@ resource "azurerm_federated_identity_credential" "bastion_login" {
   audience            = ["api://AzureADTokenExchange"]
   subject             = "vespa.tenant.${var.tenant_name}.azure-${data.azurerm_subscription.current.subscription_id}:role.azure.ssh-login"
 }
-
-output "client_id" {
-  description = "Azure AD application (client) id of the user-assigned managed identity used by Athenz."
-  value       = azurerm_user_assigned_identity.athenz.client_id
-}
