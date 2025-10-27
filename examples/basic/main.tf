@@ -43,8 +43,8 @@ module "zone_dev_azure_eastus_az1" {
   version = ">= 1.0.0, < 2.0.0"
   zone    = module.enclave.zones.dev.azure_eastus_az1
 
-  # Used internally to grant archive write permissions.
-  __archive_writer_role = module.enclave.__archive_writer_role_id
+  # Used internally to wire resources from the enclave module to the zone module.
+  __enclave_infra = module.enclave.__enclave_infra
 }
 
 output "enclave_config" {
