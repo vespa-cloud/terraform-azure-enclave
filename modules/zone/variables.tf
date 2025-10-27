@@ -13,11 +13,11 @@ variable "zone" {
 # The zone module is user facing, so mark internal vars with __ prefix.
 variable "__enclave_infra" {
   description = "Internal object containing shared enclave infrastructure resources."
-    type = object({
-      archive_writer_role_resource_id = string
-      bastion_login_principal_id      = string
-      test                            = string
-    })
+  type = object({
+    archive_writer_role_resource_id = string
+    bastion_login_principal_id      = string
+    test                            = string
+  })
 }
 
 variable "archive_reader_principals" {
