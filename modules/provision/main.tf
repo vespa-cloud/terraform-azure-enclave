@@ -40,7 +40,7 @@ resource "azurerm_user_assigned_identity" "provisioner" {
 }
 
 resource "azurerm_role_definition" "provisioner" {
-  name        = "provisioner"
+  name        = "vespa-provisioner-${data.azurerm_subscription.current.subscription_id}"
   scope       = data.azurerm_subscription.current.id
   description = "Allow config servers to provision resources"
 
@@ -89,7 +89,7 @@ resource "azurerm_user_assigned_identity" "athenz" {
 }
 
 resource "azurerm_role_definition" "athenz" {
-  name        = "athenz"
+  name        = "vespa-athenz-${data.azurerm_subscription.current.subscription_id}"
   scope       = data.azurerm_subscription.current.id
   description = "Allows athenz to retrieve id-provisioner identity"
   permissions {
