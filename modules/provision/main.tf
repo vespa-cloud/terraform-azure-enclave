@@ -138,7 +138,7 @@ resource "azurerm_federated_identity_credential" "provisioner" {
 # Role names must be unique tenant-wide, so we include the subscription id.
 # Used by each zone's archive storage account
 resource "azurerm_role_definition" "archive_writer_no_delete" {
-  name        = "archive-writer-no-delete-${data.azurerm_subscription.current.subscription_id}"
+  name        = "vespa-archive-writer-${data.azurerm_subscription.current.subscription_id}"
   scope       = data.azurerm_subscription.current.id
   description = "Allows writing archive blobs, without delete permissions."
 
