@@ -40,7 +40,7 @@ resource "azurerm_user_assigned_identity" "provisioner" {
 }
 
 resource "azurerm_role_definition" "provisioner" {
-  name        = "provisioner"
+  name        = "vespa-provisioner-${data.azurerm_subscription.current.subscription_id}"
   scope       = data.azurerm_subscription.current.id
   description = "Allow config servers to provision resources"
 
@@ -89,7 +89,7 @@ resource "azurerm_user_assigned_identity" "athenz" {
 }
 
 resource "azurerm_role_definition" "athenz" {
-  name        = "athenz"
+  name        = "vespa-athenz-${data.azurerm_subscription.current.subscription_id}"
   scope       = data.azurerm_subscription.current.id
   description = "Allows athenz to retrieve id-provisioner identity"
   permissions {
@@ -138,7 +138,7 @@ resource "azurerm_federated_identity_credential" "provisioner" {
 # Role names must be unique tenant-wide, so we include the subscription id.
 # Used by each zone's archive storage account
 resource "azurerm_role_definition" "archive_writer_no_delete" {
-  name        = "archive-writer-no-delete-${data.azurerm_subscription.current.subscription_id}"
+  name        = "vespa-archive-writer-${data.azurerm_subscription.current.subscription_id}"
   scope       = data.azurerm_subscription.current.id
   description = "Allows writing archive blobs, without delete permissions."
 
