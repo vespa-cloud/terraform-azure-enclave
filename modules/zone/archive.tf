@@ -152,7 +152,7 @@ resource "azurerm_role_assignment" "archive_storage_encryption_user" {
 # Grant blob writer permissions on storage account
 resource "azurerm_role_assignment" "id_tenant_archive_writer" {
   scope              = azurerm_storage_account.archive.id
-  role_definition_id = var.__archive_writer_role
+  role_definition_id = var.__enclave_infra.archive_writer_role_resource_id
   principal_id       = data.azurerm_user_assigned_identity.id_tenant.principal_id
 }
 
