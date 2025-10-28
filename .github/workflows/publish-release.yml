@@ -1,0 +1,32 @@
+# Keep this as a separate workflow to catch manual version tagging.
+name: Publish release when a new tag is pushed
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Publish Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: '${{ github.ref_name }}'
+          name: 'Release ${{ github.ref_name }}'
+          generate_release_notes: true
