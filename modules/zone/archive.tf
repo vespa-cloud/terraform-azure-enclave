@@ -19,7 +19,6 @@ locals {
 
 # Storage account (top level wrapper around containers)
 resource "azurerm_storage_account" "archive" {
-  #checkov:skip=CKV_AZURE_59: Storage account must be externally available to be accessed by Controller and hosts
   name                            = local.storage_name
   resource_group_name             = azurerm_resource_group.zone.name
   location                        = azurerm_resource_group.zone.location
