@@ -25,3 +25,11 @@ variable "__athenz_env" {
     error_message = "athenz_env must be either 'prod' or 'cd'"
   }
 }
+
+// Temporary array of user principals
+// TODO: Remove after deciding how to manage operator access.
+variable "__operators" {
+  description = "Internal, do not override."
+  type        = list(string)
+  default     = []
+}

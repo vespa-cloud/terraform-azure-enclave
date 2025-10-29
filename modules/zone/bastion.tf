@@ -136,7 +136,7 @@ resource "azurerm_network_security_group" "bastion" {
 }
 
 resource "azurerm_role_assignment" "bastion_login" {
-  for_each             = var.enable_ssh ? toset([
+  for_each = var.enable_ssh ? toset([
     "Virtual Machine Administrator Login",
     "Reader",
   ]) : []

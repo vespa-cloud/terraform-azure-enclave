@@ -14,6 +14,8 @@ locals {
   default_tags = {
     managed_by = "vespa_cloud"
   }
+  athenz_domain        = "vespa.tenant.${var.tenant_name}.azure-${data.azurerm_subscription.current.subscription_id}"
+  athenz_operator_role = "${local.athenz_domain}:role.azure.ssh-login"
 }
 
 data "azurerm_subscription" "current" {}
@@ -174,4 +176,30 @@ resource "azurerm_federated_identity_credential" "bastion_login" {
   issuer              = var.issuer_url
   audience            = ["api://AzureADTokenExchange"]
   subject             = "vespa.tenant.${var.tenant_name}.azure-${data.azurerm_subscription.current.subscription_id}:role.azure.ssh-login"
+}
+
+resource "azurerm_user_assigned_identity" "id_operator" {
+  name                = "id-operator"
+  location            = azurerm_resource_group.system.location
+  resource_group_name = azurerm_resource_group.system.name
+}
+
+resource "azurerm_federated_identity_credential" "id_operator" {
+  for_each            = toset(var.operators)
+  name                = "operator-${each.value}"
+  parent_id           = azurerm_user_assigned_identity.id_operator.id
+  resource_group_name = azurerm_resource_group.system.name
+  issuer              = var.issuer_url
+  audience            = ["${local.athenz_domain}:${local.athenz_operator_role}"]
+  subject             = "user.${each.value}"
+}
+
+resource "azurerm_role_assignment" "id_operator" {
+  for_each = toset([
+    "Virtual Machine Administrator Login",
+    "Reader",
+  ])
+  scope                = data.azurerm_subscription.current.id
+  role_definition_name = each.value
+  principal_id         = azurerm_user_assigned_identity.id_operator.principal_id
 }

@@ -26,4 +26,5 @@ module "provision" {
   tenant_name      = var.tenant_name
   template_version = local.template_version
   issuer_url       = local.issuer_url
+  operators        = var.__operators
 }
