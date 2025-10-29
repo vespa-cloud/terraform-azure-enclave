@@ -66,7 +66,7 @@ resource "azurerm_storage_container" "archive" {
 # Additional containers for hosted and tenant archives
 resource "azurerm_storage_container" "vespa_hosted" {
   storage_account_id    = azurerm_storage_account.archive.id
-  name                  = "vespa-hosted"
+  name                  = "hosted-vespa"
   container_access_type = "private"
 }
 
