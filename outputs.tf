@@ -28,6 +28,7 @@ data "azurerm_subscription" "current" {}
 output "enclave_config" {
   description = "Configuration values that must be shared with the Vespa team to finalize the enclave setup: Azure AD application (client) id for Athenz, subscription id and tenant id."
   value = {
+    "tenant_name" : var.tenant_name,
     "client_id" : module.provision.client_id,
     "subscription_id" : data.azurerm_subscription.current.subscription_id,
     "tenant_id" : data.azurerm_subscription.current.tenant_id

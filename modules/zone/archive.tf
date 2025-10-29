@@ -63,6 +63,19 @@ resource "azurerm_storage_container" "archive" {
   container_access_type = "private"
 }
 
+# Additional containers for hosted and tenant archives
+resource "azurerm_storage_container" "vespa_hosted" {
+  storage_account_id    = azurerm_storage_account.archive.id
+  name                  = "vespa-hosted"
+  container_access_type = "private"
+}
+
+resource "azurerm_storage_container" "tenant" {
+  storage_account_id    = azurerm_storage_account.archive.id
+  name                  = var.__enclave_infra.tenant_name
+  container_access_type = "private"
+}
+
 # Lifecycle - expiration after 31 days
 resource "azurerm_storage_management_policy" "archive" {
   storage_account_id = azurerm_storage_account.archive.id
