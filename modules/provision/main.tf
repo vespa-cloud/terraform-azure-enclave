@@ -12,8 +12,7 @@ terraform {
 locals {
   main_region = "eastus"
   default_tags = {
-    vespa_template_version = var.template_version
-    managed_by             = "vespa_cloud"
+    managed_by = "vespa_cloud"
   }
 }
 
@@ -22,7 +21,7 @@ data "azurerm_subscription" "current" {}
 resource "azurerm_resource_group" "system" {
   name     = "system"
   location = local.main_region
-  tags     = local.default_tags
+  tags     = merge(local.default_tags, { vespa_template_version = var.template_version })
 }
 
 resource "azurerm_user_assigned_identity" "identity" {
