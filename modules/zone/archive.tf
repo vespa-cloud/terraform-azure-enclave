@@ -29,7 +29,7 @@ resource "azurerm_storage_account" "archive" {
   min_tls_version                 = "TLS1_2"
   allow_nested_items_to_be_public = false
   shared_access_key_enabled       = false
-  public_network_access_enabled   = false
+  public_network_access_enabled   = true
 
   blob_properties {
     delete_retention_policy {

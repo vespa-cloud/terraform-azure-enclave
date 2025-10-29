@@ -32,6 +32,7 @@ skip-check:
   - CKV_AZURE_206 # Allow LRS (Locally-redundant storage) for enclave storage accounts.
   - CKV2_AZURE_21 # Ensure Storage logging is enabled for Blob service for read requests
   - CKV2_AZURE_33 # Storage Account Missing Private Endpoint
+  - CKV_AZURE_59 # Storage account is accessed externally by controller and hosts
 
   # Key vault encryption
   - CKV_AZURE_112 # Ensure that key vault key is backed by HSM
