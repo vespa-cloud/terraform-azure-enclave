@@ -12,7 +12,7 @@ terraform {
 locals {
   main_region = "eastus"
   default_tags = {
-    managed_by             = "vespa_cloud"
+    managed_by = "vespa_cloud"
   }
 }
 
