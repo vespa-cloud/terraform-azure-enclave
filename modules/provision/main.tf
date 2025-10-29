@@ -143,23 +143,10 @@ resource "azurerm_role_definition" "archive_writer_no_delete" {
   description = "Allows writing archive blobs, without delete permissions."
 
   permissions {
-    actions = [
-      "Microsoft.Storage/storageAccounts/blobServices/containers/read",
-      "Microsoft.Storage/storageAccounts/blobServices/containers/write",
-    ]
     data_actions = [
-      "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/read",
-      "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/write",
-      "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/move/action",
-      "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/add/action",
-    ]
-
-    # Explicitly block delete actions, in case we use wildcard permissions in the future
-    not_actions = [
-      "Microsoft.Storage/storageAccounts/blobServices/containers/delete",
-    ]
-    not_data_actions = [
-      "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/delete"
+      "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/tags/read",
+      "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/tags/write",
+      "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/write"
     ]
   }
 
