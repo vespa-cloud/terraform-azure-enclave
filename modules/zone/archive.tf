@@ -68,18 +68,6 @@ resource "azurerm_storage_container" "node_archive" {
   storage_account_id    = azurerm_storage_account.archive.id
   name                  = var.__enclave_infra.tenant_name
   container_access_type = "private"
-
-  lifecycle {
-    precondition {
-      condition = alltrue([
-        length(var.__enclave_infra.tenant_name) >= 3,
-        length(var.__enclave_infra.tenant_name) <= 63,
-        can(regex("^[a-z0-9][a-z0-9-]*[a-z0-9]$", var.__enclave_infra.tenant_name)),
-        length(regexall("--", var.__enclave_infra.tenant_name)) == 0
-      ])
-      error_message = "tenant_name must be a valid Azure Blob container name: 3-63 chars, lowercase letters/numbers/hyphens only, must start and end with a letter or number, and cannot contain consecutive hyphens."
-    }
-  }
 }
 
 # Lifecycle - expiration after 31 days
