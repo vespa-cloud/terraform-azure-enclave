@@ -135,16 +135,12 @@ resource "azurerm_network_security_group" "bastion" {
   }
 }
 
-resource "azurerm_role_assignment" "bastion_login_vm_user" {
-  count                = var.enable_ssh ? 1 : 0
+resource "azurerm_role_assignment" "bastion_login" {
+  for_each = var.enable_ssh ? toset([
+    "Virtual Machine Administrator Login",
+    "Reader",
+  ]) : []
   scope                = azurerm_resource_group.zone.id
-  role_definition_name = "Virtual Machine Administrator Login"
-  principal_id         = var.__enclave_infra.bastion_login_principal_id
-}
-
-resource "azurerm_role_assignment" "bastion_login_reader" {
-  count                = var.enable_ssh ? 1 : 0
-  scope                = azurerm_resource_group.zone.id
-  role_definition_name = "Reader"
+  role_definition_name = each.value
   principal_id         = var.__enclave_infra.bastion_login_principal_id
 }

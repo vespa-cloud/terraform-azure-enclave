@@ -31,3 +31,10 @@ variable "issuer_url" {
   type        = string
   default     = "https://zts.athenz.vespa-cloud.com:4443/zts/v1"
 }
+
+// See variables.tf in root module
+variable "operators" {
+  description = "Internal, do not override."
+  type        = list(string)
+  default     = []
+}
