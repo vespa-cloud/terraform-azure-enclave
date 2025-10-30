@@ -26,6 +26,16 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Generate static zones (check only)
+        run: python3 tools/generate_static_zones.py variables.tf outputs_zones.tf
+
+      - name: Ensure zones output is up-to-date
+        run: |
+          git diff --exit-code -- outputs_zones.tf || {
+            echo "❌ outputs_zones.tf is out of date. It must be regenerated in the PR before merging to main." >&2
+            exit 1
+          }
+
       - name: Extract template_version from main.tf
         id: version
         run: |
