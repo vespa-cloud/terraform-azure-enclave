@@ -61,7 +61,7 @@ provider "azapi" {}
 module "enclave" {
   source      = "vespa-cloud/enclave/azure"
   version     = ">= 1.0.0, < 2.0.0"
-  tenant_name = "<YOUR-TENANT-NAME>"
+  tenant_name = "<YOUR-VESPA-TENANT-NAME>"
 }
 
 # Create one Vespa Cloud zone (VNet, subnets, bastion, storage, etc.)

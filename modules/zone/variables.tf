@@ -14,6 +14,7 @@ variable "zone" {
 variable "__enclave_infra" {
   description = "Internal object containing shared enclave infrastructure resources."
   type = object({
+    tenant_name                     = string
     archive_writer_role_resource_id = string
     bastion_login_principal_id      = string
   })

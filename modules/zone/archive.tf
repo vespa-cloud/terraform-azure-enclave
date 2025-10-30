@@ -56,10 +56,17 @@ resource "azurerm_storage_account" "archive" {
   }
 }
 
-# Container (bucket equivalent)
-resource "azurerm_storage_container" "archive" {
+# Blob/storage container for the host archive
+resource "azurerm_storage_container" "host_archive" {
   storage_account_id    = azurerm_storage_account.archive.id
-  name                  = "archive"
+  name                  = "hosted-vespa"
+  container_access_type = "private"
+}
+
+# Blob/storage container for the node archive
+resource "azurerm_storage_container" "node_archive" {
+  storage_account_id    = azurerm_storage_account.archive.id
+  name                  = var.__enclave_infra.tenant_name
   container_access_type = "private"
 }
 
@@ -80,9 +87,15 @@ resource "azurerm_storage_management_policy" "archive" {
 }
 
 # Blob reader principals
-resource "azurerm_role_assignment" "archive_blob_reader" {
+resource "azurerm_role_assignment" "host_archive_blob_reader" {
   for_each             = toset(var.archive_reader_principals)
-  scope                = azurerm_storage_container.archive.id
+  scope                = azurerm_storage_container.host_archive.id
+  role_definition_name = "Storage Blob Data Reader"
+  principal_id         = each.value
+}
+resource "azurerm_role_assignment" "node_archive_blob_reader" {
+  for_each             = toset(var.archive_reader_principals)
+  scope                = azurerm_storage_container.node_archive.id
   role_definition_name = "Storage Blob Data Reader"
   principal_id         = each.value
 }
