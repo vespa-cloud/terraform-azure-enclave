@@ -8,14 +8,21 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+  cancel-in-progress: false
+
 jobs:
   tag-release:
     name: Create release tag v<template_version>
     runs-on: ubuntu-latest
+    outputs:
+      create: ${{ steps.check.outputs.create }}
+      tag: ${{ steps.check.outputs.tag }}
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -41,6 +48,7 @@ jobs:
           VER='${{ steps.version.outputs.value }}'
           TAG="v$VER"
           echo "Proposed tag: $TAG"
+
           if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
             echo "Tag $TAG already exists; nothing to do."
             echo "create=no" >> "$GITHUB_OUTPUT"
@@ -61,6 +69,7 @@ jobs:
           fi
 
           echo "create=yes" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
       - name: Create and push tag
         if: steps.check.outputs.create == 'yes'
@@ -72,3 +81,22 @@ jobs:
           git tag -a "$TAG" -m "Release $TAG"
           git push origin "$TAG"
           echo "🏷️Created and pushed tag️ $TAG"
+
+
+  publish-release:
+    name: Publish Release
+    runs-on: ubuntu-latest
+    needs: tag-release
+    if: needs.tag-release.outputs.create == 'yes'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.tag-release.outputs.tag }}
+          name: Release ${{ needs.tag-release.outputs.tag }}
+          generate_release_notes: true
