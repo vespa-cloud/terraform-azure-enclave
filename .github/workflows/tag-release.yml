@@ -94,9 +94,18 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ needs.tag-release.outputs.tag }}
-          name: Release ${{ needs.tag-release.outputs.tag }}
-          generate_release_notes: true
+      - name: Create GitHub Release (gh)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ needs.tag-release.outputs.tag }}
+        run: |
+          set -euo pipefail
+          echo "Creating release for $TAG"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists; nothing to do."
+          else
+            gh release create "$TAG" \
+              --title "Release $TAG" \
+              --generate-notes
+            echo "✅ Created release $TAG"
+          fi
