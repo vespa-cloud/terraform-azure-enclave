@@ -13,13 +13,31 @@ locals {
       zone
     )...
   }
+
+  // Map keyed by environment, then by region (hyphens replaced by underscores)
+  get = {
+    for env, zones in local.zones_by_env :
+    env => {
+      for _, z in zones :
+      replace(z.region, "-", "_") => z
+    }
+  }
+}
+
+output "zones_old" {
+  description = "Map of available Vespa Cloud zones grouped by environment. Available zones are listed at https://cloud.vespa.ai/en/reference/zones.html. Reference a zone with `[environment].[region with - replaced by _]` (e.g. `prod.azure_eastus_az1`)."
+  value = {
+    for environment, zones in local.zones_by_env :
+    environment => { for z in zones : replace(z.region, "-", "_") => z }
+  }
 }
 
 output "zones" {
   description = "Map of available Vespa Cloud zones grouped by environment. Available zones are listed at https://cloud.vespa.ai/en/reference/zones.html. Reference a zone with `[environment].[region with - replaced by _]` (e.g. `prod.azure_eastus_az1`)."
   value = {
-    for environment, zones in local.zones_by_env :
-    environment => { for z in zones : replace(z.region, "-", "_") => z }
+    dev = {
+      azure_eastus_az1 = local.get["dev"]["azure_eastus_az1"]
+    }
   }
 }
 
