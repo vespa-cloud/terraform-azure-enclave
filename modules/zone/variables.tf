@@ -17,6 +17,7 @@ variable "__enclave_infra" {
     tenant_name                     = string
     archive_writer_role_resource_id = string
     bastion_login_principal_id      = string
+    id_tenant_principal_id          = string
   })
 }
 
