@@ -31,9 +31,18 @@ jobs:
           # Ensure we have access to the PR head repo (for forked PRs)
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
+      - name: Set up OpenTofu
+        uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: latest
+
       - name: Generate static zones output
+        run: python3 tools/generate_static_zones.py variables.tf outputs_zones.tf
+
+      - name: Format generated file
         run: |
-          python3 tools/generate_static_zones.py variables.tf outputs_zones.tf
+          # Format only the generated file to avoid unrelated churn
+          tofu fmt -write=true outputs_zones.tf
 
       - name: Diff regenerated file
         id: diff
