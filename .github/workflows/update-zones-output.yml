@@ -31,10 +31,18 @@ jobs:
           # Ensure we have access to the PR head repo (for forked PRs)
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
-      - name: Set up OpenTofu
-        uses: opentofu/setup-opentofu@v1
-        with:
-          tofu_version: latest
+#      - name: Set up OpenTofu
+#        uses: opentofu/setup-opentofu@v1
+#        with:
+#          tofu_version: latest
+
+      - name: Install OpenTofu
+        run: |
+          TOFU_VERSION=1.10.6
+          curl -L https://github.com/opentofu/opentofu/releases/download/v${TOFU_VERSION}/tofu_${TOFU_VERSION}_linux_amd64.zip -o tofu.zip
+          unzip tofu.zip -d /usr/local/bin
+          rm tofu.zip
+          tofu version
 
       - name: Generate static zones output
         run: python3 tools/generate_static_zones.py variables.tf outputs_zones.tf
