@@ -1,11 +1,4 @@
 
-# Look up user assigned identity for tenant host
-# Depends on "id-tenant" in "system" rg from global parent module
-data "azurerm_user_assigned_identity" "id_tenant" {
-  name                = "id-tenant"
-  resource_group_name = "system"
-}
-
 resource "random_string" "archive" {
   length  = 6
   special = false
@@ -166,7 +159,7 @@ resource "azurerm_role_assignment" "archive_storage_encryption_user" {
 resource "azurerm_role_assignment" "id_tenant_archive_writer" {
   scope              = azurerm_storage_account.archive.id
   role_definition_id = var.__enclave_infra.archive_writer_role_resource_id
-  principal_id       = data.azurerm_user_assigned_identity.id_tenant.principal_id
+  principal_id       = var.__enclave_infra.id_tenant_principal_id
 }
 
 # Attach key to storage account (CMK)
