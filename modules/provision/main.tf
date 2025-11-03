@@ -24,7 +24,7 @@ resource "azurerm_resource_group" "system" {
   tags     = merge(local.default_tags, { vespa_template_version = var.template_version })
 }
 
-resource "azurerm_user_assigned_identity" "identity" {
+resource "azurerm_user_assigned_identity" "tenant" {
   location            = local.main_region
   name                = "id-tenant"
   resource_group_name = azurerm_resource_group.system.name
