@@ -27,6 +27,22 @@ resource "azurerm_bastion_host" "bastion" {
   }
 }
 
+// Enable flow logs for bastion NSG
+resource "azurerm_network_watcher_flow_log" "bastion" {
+  count                = var.enable_ssh ? 1 : 0
+  name                 = "flowlogs-${var.zone.name}-bastion"
+  network_watcher_name = data.azurerm_network_watcher.this.name
+  resource_group_name  = data.azurerm_network_watcher.this.resource_group_name
+  target_resource_id   = azurerm_network_security_group.bastion.id
+  storage_account_id   = azurerm_storage_account.flow_logs_storage.id
+  enabled              = true
+
+  retention_policy {
+    enabled = true
+    days    = 30
+  }
+}
+
 resource "azurerm_network_security_group" "bastion" {
   // This resource must be created since it is referenced by the subnet inlined in the virtual network
   // count = var.enable_ssh ? 1 : 0

@@ -108,3 +108,53 @@ resource "azurerm_network_security_group" "main" {
     zone = var.zone.name
   }
 }
+
+// --- Flow logs setup (no Traffic Analytics workspace) ---
+// Enable NSG flow logs for each zone. Logs are stored in a per-zone Storage Account.
+// Prerequisite: Regional Network Watcher must exist (Azure usually auto-creates
+// it in resource group "NetworkWatcherRG" as "NetworkWatcher_<region>").
+// ⚠️There can only be one network watcher per region per subscription.
+
+// Look up the regional Network Watcher
+data "azurerm_network_watcher" "this" {
+  name                = "NetworkWatcher_${var.zone.azure_region}"
+  resource_group_name = "NetworkWatcherRG"
+}
+
+// Random suffix to ensure a globally-unique storage account name
+// ⚠️Storage account names must be unique across Azure, and only allow lowercase letters and numbers.
+resource "random_string" "flowlogs_suffix" {
+  length  = 6
+  upper   = false
+  special = false
+}
+
+// Storage account to store NSG flow logs for this zone
+resource "azurerm_storage_account" "flow_logs_storage" {
+  name                            = lower(replace(replace("flowlogs${var.zone.short_name}${random_string.flowlogs_suffix.result}", "-", ""), ".", ""))
+  resource_group_name             = azurerm_resource_group.zone.name
+  location                        = azurerm_resource_group.zone.location
+  account_tier                    = "Standard"
+  account_replication_type        = "LRS"
+  allow_nested_items_to_be_public = false
+  shared_access_key_enabled       = false
+
+  tags = {
+    zone = var.zone.name
+  }
+}
+
+// Enable flow logs for main NSG (bastion flow log is set up in bastion.tf)
+resource "azurerm_network_watcher_flow_log" "main" {
+  name                 = "flowlogs-${var.zone.name}-main"
+  network_watcher_name = data.azurerm_network_watcher.this.name
+  resource_group_name  = data.azurerm_network_watcher.this.resource_group_name
+  target_resource_id   = azurerm_network_security_group.main.id
+  storage_account_id   = azurerm_storage_account.flow_logs_storage.id
+  enabled              = true
+
+  retention_policy {
+    enabled = true
+    days    = 30
+  }
+}
