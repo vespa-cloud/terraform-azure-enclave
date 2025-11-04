@@ -3,7 +3,8 @@ variable "tenant_name" {
   type        = string
 }
 
-// Default list of Azure Vespa Cloud zones, used for testing and development.
+// List of Azure Vespa Cloud zones. Overriding is only for Vespa internal tests.
+// New zones must be added to the default value here.
 variable "__all_zones" {
   description = "Internal, do not override."
   type = list(object({

@@ -1,4 +1,6 @@
 locals {
+  // Builds a map from environment => list of zones for that environment.
+  // Each zone object is enriched with derived fields
   zones_by_env = {
     for zone in var.__all_zones :
     zone.environment => merge(
@@ -15,8 +17,9 @@ locals {
   }
 }
 
-output "zones" {
-  description = "Map of available Vespa Cloud zones grouped by environment. Available zones are listed at https://cloud.vespa.ai/en/reference/zones.html. Reference a zone with `[environment].[region with - replaced by _]` (e.g. `prod.azure_eastus_az1`)."
+output "__test_zones" {
+  description = "Dynamic map of zones computed from var.__all_zones (for internal tests only)."
+  # Create nested map structure: env → region_with_underscores → zone_object
   value = {
     for environment, zones in local.zones_by_env :
     environment => { for z in zones : replace(z.region, "-", "_") => z }

@@ -1,0 +1,85 @@
+name: Regenerate static zones output
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'variables.tf'
+      - 'tools/generate_static_zones.py'
+      - '.github/workflows/update-zones-output.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  regen-static-zones:
+    name: Regenerate outputs_zones.tf and push to PR branch (same-repo PRs)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout PR HEAD
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          # Checkout PR HEAD (By default, actions/checkout on pull_request checks out a synthetic merge ref.)
+          ref: ${{ github.event.pull_request.head.ref }}
+          # Ensure we have access to the PR head repo (for forked PRs)
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+
+#      - name: Set up OpenTofu
+#        uses: opentofu/setup-opentofu@v1
+#        with:
+#          tofu_version: latest
+
+      - name: Install OpenTofu
+        run: |
+          TOFU_VERSION=1.10.6
+          curl -L https://github.com/opentofu/opentofu/releases/download/v${TOFU_VERSION}/tofu_${TOFU_VERSION}_linux_amd64.zip -o tofu.zip
+          unzip tofu.zip -d /usr/local/bin
+          rm tofu.zip
+          tofu version
+
+      - name: Generate static zones output
+        run: python3 tools/generate_static_zones.py variables.tf outputs_zones.tf
+
+      - name: Format generated file
+        run: |
+          # Format only the generated file to avoid unrelated churn
+          tofu fmt -write=true outputs_zones.tf
+
+      - name: Diff regenerated file
+        id: diff
+        run: |
+          if git diff --quiet -- outputs_zones.tf; then
+            echo "changed=no" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=yes" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit and push (same-repo PRs only)
+        if: >-
+          steps.diff.outputs.changed == 'yes' &&
+          github.event.pull_request.head.repo.full_name == github.repository
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add outputs_zones.tf
+          git commit -m "chore: regenerate static zones output"
+          # Push to the PR head branch
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          echo "✅ outputs_zones.tf was out of date and has been regenerated and pushed to the PR branch."
+
+      - name: Fail if fork PR and file is out of date
+        if: >-
+          steps.diff.outputs.changed == 'yes' &&
+          github.event.pull_request.head.repo.full_name != github.repository
+        run: |
+          echo "❌ outputs_zones.tf is out of date. This PR is from a fork so the bot cannot push fixes." >&2
+          echo "Please run: python3 tools/generate_static_zones.py variables.tf outputs_zones.tf and commit the result." >&2
+          exit 1

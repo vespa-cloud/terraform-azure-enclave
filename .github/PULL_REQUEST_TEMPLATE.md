@@ -18,4 +18,4 @@ See more details in .github/CONTRIBUTING.md.
 - [ ] Regular - bumped version `locals.template_version` in `main.tf`
 - [ ] Minor/internal - no version bump (renaming/refactoring, comments, .github)
 
-First time contributor? Please check the policy in [CONTRIBUTING.md](./CONTRIBUTING.md).
+First time contributor? Please check the policy in [CONTRIBUTING.md](https://github.com/vespa-cloud/terraform-azure-enclave/blob/main/.github/CONTRIBUTING.md).
