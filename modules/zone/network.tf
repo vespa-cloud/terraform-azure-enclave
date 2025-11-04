@@ -122,7 +122,7 @@ data "azurerm_network_watcher" "this" {
 }
 
 // Random suffix to ensure a globally-unique storage account name
-// ⚠️Storage account names must be unique across Azure, and only allow lowercase letters and numbers.
+// ⚠️Storage account names must be unique across Azure, max 24 chars, only lowercase letters and numbers.
 resource "random_string" "flowlogs_suffix" {
   length  = 6
   upper   = false
@@ -130,8 +130,9 @@ resource "random_string" "flowlogs_suffix" {
 }
 
 // Storage account to store NSG flow logs for this zone
+// vfl = vespa flow logs
 resource "azurerm_storage_account" "flow_logs_storage" {
-  name                            = lower(replace(replace("flowlogs${var.zone.short_name}${random_string.flowlogs_suffix.result}", "-", ""), ".", ""))
+  name                            = lower(replace(replace("vfl${var.zone.short_name}${random_string.flowlogs_suffix.result}", "-", ""), ".", ""))
   resource_group_name             = azurerm_resource_group.zone.name
   location                        = azurerm_resource_group.zone.location
   account_tier                    = "Standard"
