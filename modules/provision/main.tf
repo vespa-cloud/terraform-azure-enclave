@@ -163,21 +163,6 @@ resource "azapi_resource_action" "enable_encryption_at_host" {
   body        = {}
 }
 
-resource "azurerm_user_assigned_identity" "bastion_login" {
-  name                = "bastion-ssh-login"
-  location            = azurerm_resource_group.system.location
-  resource_group_name = azurerm_resource_group.system.name
-}
-
-resource "azurerm_federated_identity_credential" "bastion_login" {
-  name                = "athenz"
-  resource_group_name = azurerm_resource_group.system.name
-  parent_id           = azurerm_user_assigned_identity.bastion_login.id
-  issuer              = var.issuer_url
-  audience            = ["api://AzureADTokenExchange"]
-  subject             = "vespa.tenant.${var.tenant_name}.azure-${data.azurerm_subscription.current.subscription_id}:role.azure.ssh-login"
-}
-
 resource "azurerm_user_assigned_identity" "id_operator" {
   name                = "id-operator"
   location            = azurerm_resource_group.system.location

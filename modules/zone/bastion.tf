@@ -134,13 +134,3 @@ resource "azurerm_network_security_group" "bastion" {
     destination_port_range     = "80"
   }
 }
-
-resource "azurerm_role_assignment" "bastion_login" {
-  for_each = var.enable_ssh ? toset([
-    "Virtual Machine Administrator Login",
-    "Reader",
-  ]) : []
-  scope                = azurerm_resource_group.zone.id
-  role_definition_name = each.value
-  principal_id         = var.__enclave_infra.bastion_login_principal_id
-}
