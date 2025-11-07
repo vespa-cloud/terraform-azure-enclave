@@ -39,7 +39,7 @@ resource "azurerm_role_definition" "controller_system" {
 
 resource "azurerm_role_assignment" "controller_system" {
   scope              = azurerm_resource_group.system.id
-  role_definition_id = azurerm_role_definition.controller_archive.role_definition_resource_id
+  role_definition_id = azurerm_role_definition.controller_system.role_definition_resource_id
   principal_id       = azurerm_user_assigned_identity.controller.principal_id
 }
 
