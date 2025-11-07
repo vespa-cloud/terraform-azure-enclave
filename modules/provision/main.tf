@@ -64,8 +64,7 @@ resource "azurerm_role_definition" "provisioner" {
       "Microsoft.Network/virtualNetworks/joinLoadBalancer/action",
       "Microsoft.Network/loadBalancers/delete",
       "Microsoft.Network/publicIPAddresses/delete",
-      "Microsoft.Compute/skus/read",
-      "Microsoft.Storage/storageAccounts/read"
+      "Microsoft.Compute/skus/read"
     ]
   }
 }
@@ -74,12 +73,6 @@ resource "azurerm_role_assignment" "provisioner" {
   scope              = data.azurerm_subscription.current.id
   role_definition_id = azurerm_role_definition.provisioner.role_definition_resource_id
   principal_id       = azurerm_user_assigned_identity.provisioner.principal_id
-}
-
-resource "azurerm_role_assignment" "provisioner_rg_reader" {
-  scope                = azurerm_resource_group.system.id
-  role_definition_name = "Reader"
-  principal_id         = azurerm_user_assigned_identity.provisioner.principal_id
 }
 
 resource "azurerm_user_assigned_identity" "athenz" {
@@ -92,10 +85,10 @@ resource "azurerm_user_assigned_identity" "athenz" {
 resource "azurerm_role_definition" "athenz" {
   name        = "vespa-athenz-${data.azurerm_subscription.current.subscription_id}"
   scope       = data.azurerm_subscription.current.id
-  description = "Allows athenz to retrieve id-provisioner identity"
+  description = "Gives Athenz access to the subscription"
   permissions {
     actions = [
-      "Microsoft.ManagedIdentity/userAssignedIdentities/read",
+      "Microsoft.ManagedIdentity/userAssignedIdentities/read", // Lookup client ID of user-assigned managed identities
       "Microsoft.Compute/virtualMachines/read"
     ]
   }
