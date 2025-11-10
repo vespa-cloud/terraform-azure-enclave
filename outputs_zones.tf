@@ -8,12 +8,13 @@ output "zones" {
   value = {
     dev = {
       azure_eastus_az1 = {
-        azure_region  = "eastus"
-        environment   = "dev"
-        name          = "dev.azure-eastus-az1"
-        physical_zone = "eastus-az1"
-        region        = "azure-eastus-az1"
-        short_name    = "dev.eastus-az1"
+        azure_region    = "eastus"
+        environment     = "dev"
+        name            = "dev.azure-eastus-az1"
+        physical_zone   = "eastus-az1"
+        region          = "azure-eastus-az1"
+        short_name      = "dev.eastus-az1"
+        __enclave_infra = module.provision.enclave_infra
       }
     }
   }
