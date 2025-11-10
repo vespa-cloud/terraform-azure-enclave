@@ -33,7 +33,7 @@ resource "azurerm_role_definition" "controller_system" {
   permissions {
     actions = [
       "Microsoft.Resources/subscriptions/resourceGroups/read", // Read the resource group itself
-      "Microsoft.Resources/tags/read" // Read the version tag
+      "Microsoft.Resources/tags/read"                          // Read the version tag
     ]
   }
 }
