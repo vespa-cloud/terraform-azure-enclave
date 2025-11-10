@@ -14,18 +14,6 @@ variable "template_version" {
 }
 
 // See variables.tf in root module
-variable "all_zones" {
-  description = "Internal, do not override."
-  type = list(object({
-    environment   = string
-    physical_zone = string
-  }))
-  default = [
-    { environment = "dev", physical_zone = "eastus-az1" },
-  ]
-}
-
-// See variables.tf in root module
 variable "issuer_url" {
   description = "Internal, do not override."
   type        = string
