@@ -27,11 +27,12 @@ resource "azurerm_role_assignment" "controller_archive" {
 
 resource "azurerm_role_definition" "controller_system" {
   name        = "vespa-controller-${data.azurerm_subscription.current.subscription_id}"
-  scope       = data.azurerm_subscription.current.id
+  scope       = azurerm_resource_group.system.id
   description = "Gives the controller access to the system resource group"
 
   permissions {
     actions = [
+      "Microsoft.Resources/subscriptions/resourceGroups/read", // Read the resource group itself
       "Microsoft.Resources/tags/read" // Read the version tag
     ]
   }
