@@ -17,6 +17,9 @@ locals {
   }
 }
 
+// Internal test-only output exposing every zone from var.__all_zones (overridable).
+// Regular consumers must use output "zones" in outputs_zones.tf to get IDE auto-completion for default zones.
+// Not for production use; avoid depending on "__test_zones" outside tests.
 output "__test_zones" {
   description = "Dynamic map of zones computed from var.__all_zones (for internal tests only)."
   # Create nested map structure: env → region_with_underscores → zone_object
