@@ -88,7 +88,7 @@ See complete working example in `examples/basic`.
 - tenant_name (string, required): The Vespa Cloud tenant name that will operate in this subscription.
 
 ### Internal-use inputs (do not override)
-- __athenz_env (string, optional, default "prod"): INTERNAL. Selects the Athenz ZTS issuer URL (one of: "prod", "cd"). Do not override.
+- __zts_url (string, optional, default "https://zts.athenz.vespa-cloud.com:4443/zts/v1"): INTERNAL. Athenz ZTS issuer URL for federated identity credentials. Do not override.
 - __all_zones (list(object), optional): INTERNAL. Default list of Azure Vespa Cloud zones. Do not override.
 
 Internal inputs (prefixed with double underscores) are not part of the public,

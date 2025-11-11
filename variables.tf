@@ -16,15 +16,11 @@ variable "__all_zones" {
   ]
 }
 
-// Issuer (Athenz ZTS) URL for federated identity credentials (either 'prod' or 'cd').
-variable "__athenz_env" {
+// Issuer (Athenz ZTS) URL for federated identity credentials.
+variable "__zts_url" {
   description = "Internal, do not override."
   type        = string
-  default     = "prod"
-  validation {
-    condition     = contains(["prod", "cd"], var.__athenz_env)
-    error_message = "athenz_env must be either 'prod' or 'cd'"
-  }
+  default     = "https://zts.athenz.vespa-cloud.com:4443/zts/v1"
 }
 
 // Temporary array of user principals
