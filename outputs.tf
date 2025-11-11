@@ -25,7 +25,7 @@ output "__test_zones" {
     environment => {
       for z in zones :
       replace(z.region, "-", "_") => merge(z, {
-        __enclave_infra = module.provision.enclave_infra
+        enclave_infra = module.provision.enclave_infra
       })
     }
   }
@@ -42,4 +42,3 @@ output "enclave_config" {
     "azure_tenant_id" : data.azurerm_subscription.current.tenant_id
   }
 }
-

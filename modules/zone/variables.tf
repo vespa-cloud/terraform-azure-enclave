@@ -9,7 +9,7 @@ variable "zone" {
     physical_zone = string, // The physical (availability) zone, e.g. eastus-az1
 
     # Internal infrastructure details - automatically populated from enclave module
-    __enclave_infra = object({
+    enclave_infra = object({
       tenant_name                     = string
       archive_writer_role_resource_id = string
       id_tenant_principal_id          = string
