@@ -30,9 +30,9 @@ variable "enable_ssh" {
 }
 
 variable "key_officers" {
-  description = "Azure principal IDs of key vault officers, e.g. for disk encryption"
+  description = "Azure principal IDs of key vault officers (in addition to the current user), e.g. for disk encryption"
   type        = list(string)
-  default     = [] // Empty list => current user is key officer
+  default     = []
 }
 
 // An IPv4 CIDR that determines the address space to be used for the Vespa Enclave zone.
