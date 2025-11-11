@@ -15,6 +15,13 @@ locals {
       zone
     )...
   }
+
+  // Enclave infrastructure object (used internally by zone objects)
+  enclave_infra = {
+    tenant_name                     = var.tenant_name
+    archive_writer_role_resource_id = azurerm_role_definition.archive_writer_no_delete.role_definition_resource_id
+    id_tenant_principal_id          = azurerm_user_assigned_identity.tenant.principal_id
+  }
 }
 
 // Internal test-only output exposing every zone from var.__all_zones (overridable).
@@ -28,19 +35,17 @@ output "__test_zones" {
     environment => {
       for z in zones :
       replace(z.region, "-", "_") => merge(z, {
-        enclave_infra = module.provision.enclave_infra
+        enclave_infra = local.enclave_infra
       })
     }
   }
 }
 
-data "azurerm_subscription" "current" {}
-
 output "enclave_config" {
   description = "Configuration values that must be shared with the Vespa team to finalize the enclave setup: Azure AD application (client) id for Athenz, subscription id and tenant id."
   value = {
     "vespa_tenant_name" : var.tenant_name,
-    "id_athenz_client_id" : module.provision.client_id,
+    "id_athenz_client_id" : azurerm_user_assigned_identity.athenz.client_id,
     "subscription_id" : data.azurerm_subscription.current.subscription_id,
     "azure_tenant_id" : data.azurerm_subscription.current.tenant_id
   }

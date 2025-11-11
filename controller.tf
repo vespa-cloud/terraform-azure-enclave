@@ -1,10 +1,19 @@
-// Resources related to the Vespa Controller
+// Controller identity and permissions for Vespa Cloud controller access
 
 resource "azurerm_user_assigned_identity" "controller" {
   location            = local.main_region
   name                = "id-controller"
   resource_group_name = azurerm_resource_group.system.name
   tags                = local.default_tags
+}
+
+resource "azurerm_federated_identity_credential" "controller" {
+  name                = "athenz"
+  resource_group_name = azurerm_resource_group.system.name
+  issuer              = local.issuer_url
+  audience            = ["api://AzureADTokenExchange"]
+  parent_id           = azurerm_user_assigned_identity.controller.id
+  subject             = "vespa.tenant.${var.tenant_name}.azure-${data.azurerm_subscription.current.subscription_id}:role.azure.controller"
 }
 
 resource "azurerm_role_definition" "controller_archive" {
@@ -42,13 +51,4 @@ resource "azurerm_role_assignment" "controller_system" {
   scope              = azurerm_resource_group.system.id
   role_definition_id = azurerm_role_definition.controller_system.role_definition_resource_id
   principal_id       = azurerm_user_assigned_identity.controller.principal_id
-}
-
-resource "azurerm_federated_identity_credential" "controller" {
-  name                = "athenz"
-  resource_group_name = azurerm_resource_group.system.name
-  issuer              = var.issuer_url
-  audience            = ["api://AzureADTokenExchange"]
-  parent_id           = azurerm_user_assigned_identity.controller.id
-  subject             = "vespa.tenant.${var.tenant_name}.azure-${data.azurerm_subscription.current.subscription_id}:role.azure.controller"
 }
