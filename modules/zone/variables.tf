@@ -7,16 +7,13 @@ variable "zone" {
     region        = string, // The Vespa Cloud region, e.g. azure-eastus-az1
     azure_region  = string, // The Azure region, e.g. eastus
     physical_zone = string, // The physical (availability) zone, e.g. eastus-az1
-  })
-}
 
-# The zone module is user facing, so mark internal vars with __ prefix.
-variable "__enclave_infra" {
-  description = "Internal object containing shared enclave infrastructure resources."
-  type = object({
-    tenant_name                     = string
-    archive_writer_role_resource_id = string
-    id_tenant_principal_id          = string
+    # Internal infrastructure details - automatically populated from enclave module
+    enclave_infra = object({
+      tenant_name                     = string
+      archive_writer_role_resource_id = string
+      id_tenant_principal_id          = string
+    })
   })
 }
 

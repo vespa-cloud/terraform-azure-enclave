@@ -22,7 +22,12 @@ output "__test_zones" {
   # Create nested map structure: env → region_with_underscores → zone_object
   value = {
     for environment, zones in local.zones_by_env :
-    environment => { for z in zones : replace(z.region, "-", "_") => z }
+    environment => {
+      for z in zones :
+      replace(z.region, "-", "_") => merge(z, {
+        enclave_infra = module.provision.enclave_infra
+      })
+    }
   }
 }
 
@@ -36,9 +41,4 @@ output "enclave_config" {
     "subscription_id" : data.azurerm_subscription.current.subscription_id,
     "azure_tenant_id" : data.azurerm_subscription.current.tenant_id
   }
-}
-
-output "__enclave_infra" {
-  description = "Internal infrastructure details of the enclave module."
-  value       = module.provision.enclave_infra
 }

@@ -59,7 +59,7 @@ resource "azurerm_storage_container" "host_archive" {
 # Blob/storage container for the node archive
 resource "azurerm_storage_container" "node_archive" {
   storage_account_id    = azurerm_storage_account.archive.id
-  name                  = var.__enclave_infra.tenant_name
+  name                  = var.zone.enclave_infra.tenant_name
   container_access_type = "private"
 }
 
@@ -158,8 +158,8 @@ resource "azurerm_role_assignment" "archive_storage_encryption_user" {
 # Grant blob writer permissions on storage account
 resource "azurerm_role_assignment" "id_tenant_archive_writer" {
   scope              = azurerm_storage_account.archive.id
-  role_definition_id = var.__enclave_infra.archive_writer_role_resource_id
-  principal_id       = var.__enclave_infra.id_tenant_principal_id
+  role_definition_id = var.zone.enclave_infra.archive_writer_role_resource_id
+  principal_id       = var.zone.enclave_infra.id_tenant_principal_id
 }
 
 # Attach key to storage account (CMK)
