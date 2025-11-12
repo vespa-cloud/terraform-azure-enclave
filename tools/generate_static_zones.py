@@ -83,7 +83,7 @@ def write_outputs(path: Path, data):
                 for k in sorted(info.keys()):
                     f.write(f'        {k} = "{info[k]}"\n')
                 # Add enclave_infra as a dynamic reference
-                f.write('        enclave_infra = module.provision.enclave_infra\n')
+                f.write('        enclave_infra = local.enclave_infra\n')
                 f.write("      }\n")
             f.write("    }\n")
         f.write("  }\n")

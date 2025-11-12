@@ -14,7 +14,7 @@ output "zones" {
         physical_zone = "eastus-az1"
         region        = "azure-eastus-az1"
         short_name    = "dev.eastus-az1"
-        enclave_infra = module.provision.enclave_infra
+        enclave_infra = local.enclave_infra
       }
     }
   }
