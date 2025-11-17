@@ -10,10 +10,10 @@ This example demonstrates how to provision multiple Vespa Cloud zones across dif
 ## Architecture
 
 This example provisions:
-- `test.azure-eastus-az1` - Test environment in US East
-- `staging.azure-eastus-az1` - Staging environment in US East
-- `prod.azure-eastus-az1` - Production environment in US East
-- `prod.azure-westeurope-az1` - Production environment in EU West
+- `test.azure-eastus-az1` - Test environment in East US
+- `staging.azure-eastus-az1` - Staging environment in East US
+- `prod.azure-eastus-az1` - Production environment in East US
+- `prod.azure-westeurope-az1` - Production environment in West Europe
 
 Each zone gets:
 - VNet with dual-stack IPv4/IPv6 addressing
