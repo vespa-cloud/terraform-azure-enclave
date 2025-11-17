@@ -45,7 +45,7 @@ module "zone_test_azure_eastus_az1" {
   version = ">= 1.0.0, < 2.0.0"
   zone    = module.enclave.zones.test.azure_eastus_az1
 
-  enable_ssh = false  # SSH disabled in test
+  enable_ssh = false # SSH disabled in test
 }
 
 module "zone_staging_azure_eastus_az1" {
@@ -53,7 +53,7 @@ module "zone_staging_azure_eastus_az1" {
   version = ">= 1.0.0, < 2.0.0"
   zone    = module.enclave.zones.staging.azure_eastus_az1
 
-  enable_ssh = true  # SSH enabled for debugging in staging
+  enable_ssh = true # SSH enabled for debugging in staging
 }
 
 module "zone_prod_azure_eastus_az1" {
@@ -61,8 +61,8 @@ module "zone_prod_azure_eastus_az1" {
   version = ">= 1.0.0, < 2.0.0"
   zone    = module.enclave.zones.prod.azure_eastus_az1
 
-  enable_ssh                  = false  # SSH disabled in production
-  archive_reader_principals   = []     # Add principal IDs that need archive access
+  enable_ssh                = false # SSH disabled in production
+  archive_reader_principals = []    # Add principal IDs that need archive access
 }
 
 module "zone_prod_azure_westeurope_az1" {
@@ -70,8 +70,8 @@ module "zone_prod_azure_westeurope_az1" {
   version = ">= 1.0.0, < 2.0.0"
   zone    = module.enclave.zones.prod.azure_westeurope_az1
 
-  enable_ssh                  = false  # SSH disabled in production
-  archive_reader_principals   = []     # Add principal IDs that need archive access
+  enable_ssh                = false # SSH disabled in production
+  archive_reader_principals = []    # Add principal IDs that need archive access
 }
 
 #
