@@ -13,7 +13,7 @@ SemVer is required: `MAJOR.MINOR.PATCH` (no `v` prefix in the file).
     - The latest existing tag (`v<MAJOR.MINOR.PATCH>`).
   - CI (`version-check.yml`) enforces this and will fail if the bump is missing or not higher.
 
-- Minor/no-tag PRs (truly trivial changes only):
+- Minor/no-tag PRs (internal and trivial changes only):
   - Do NOT bump `locals.template_version`.
   - Mark intent by either:
     - Adding the `no-tag` label, or
@@ -23,13 +23,14 @@ SemVer is required: `MAJOR.MINOR.PATCH` (no `v` prefix in the file).
 Important: Documentation changes are NOT considered minor and must bump the version.
 
 Examples of minor/no-tag changes:
-- Comment typo fixes in code
-- Whitespace-only or formatting-only changes
-- Non-functional renames that do not alter behavior nor documentation
+- Changes in `.github/` or `tools/` that do not affect module behavior
+- Comments or typo fixes in code
+- Refactoring that does not alter behavior nor documentation
+- Tests that do not affect module behavior
 
 Examples that REQUIRE a version bump (regular PRs):
-- Any documentation change (README, module docs, examples, etc.)
-- Any behavioral change to Terraform resources, variables, outputs or defaults
+- Visible documentation changes (README, module docs, examples, etc.)
+- Behavioral changes to Terraform resources, variables, outputs or defaults
 - Any change that users should be aware of when consuming the module
 
 ## What happens on merge
