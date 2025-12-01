@@ -16,12 +16,18 @@ resource "azurerm_federated_identity_credential" "id_operator" {
   subject             = "user.${each.value}"
 }
 
-resource "azurerm_role_assignment" "id_operator" {
-  for_each = toset([
-    "Virtual Machine Administrator Login",
-    "Reader",
-  ])
-  scope                = data.azurerm_subscription.current.id
-  role_definition_name = each.value
-  principal_id         = azurerm_user_assigned_identity.id_operator.principal_id
+resource "azurerm_role_definition" "bastion_vm_connect_reader" {
+  name        = "Bastion Reader"
+  scope       = data.azurerm_subscription.current.id
+  description = "Allows id-operator to read bastion hosts if SSH is enabled"
+
+  permissions {
+    actions = [
+      "Microsoft.Network/bastionHosts/read"
+    ]
+  }
+
+  assignable_scopes = [
+    data.azurerm_subscription.current.id,
+  ]
 }
