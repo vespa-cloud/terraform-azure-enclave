@@ -17,7 +17,7 @@ resource "azurerm_federated_identity_credential" "id_operator" {
 }
 
 resource "azurerm_role_definition" "bastion_vm_connect_reader" {
-  name        = "Bastion Reader"
+  name        = "vespa-operator-${data.azurerm_subscription.current.subscription_id}"
   scope       = data.azurerm_subscription.current.id
   description = "Allows id-operator to read bastion hosts if SSH is enabled"
 
