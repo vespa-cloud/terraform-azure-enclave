@@ -148,7 +148,7 @@ resource "azurerm_network_security_group" "bastion" {
 resource "azurerm_role_assignment" "operator_bastion_reader" {
   count              = var.enable_ssh ? 1 : 0
   scope              = azurerm_resource_group.zone.id
-  role_definition_id = var.zone.enclave_infra.operator_role_id
+  role_definition_id = var.zone.enclave_infra.operator_role_definition_id
   principal_id       = var.zone.enclave_infra.id_operator_principal_id
 }
 

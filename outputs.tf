@@ -22,7 +22,7 @@ locals {
     archive_writer_role_resource_id = azurerm_role_definition.archive_writer_no_delete.role_definition_resource_id
     id_tenant_principal_id          = azurerm_user_assigned_identity.tenant.principal_id
     id_operator_principal_id        = azurerm_user_assigned_identity.id_operator.principal_id
-    operator_role_id                = azurerm_role_definition.bastion_vm_connect_reader.id
+    operator_role_definition_id     = azurerm_role_definition.bastion_vm_connect_reader.role_definition_id
   }
 }
 
