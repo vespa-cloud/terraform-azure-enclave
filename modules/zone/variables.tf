@@ -13,8 +13,6 @@ variable "zone" {
       tenant_name                     = string
       archive_writer_role_resource_id = string
       id_tenant_principal_id          = string
-      id_operator_principal_id        = string
-      operator_role_id                = string
     })
   })
 }
