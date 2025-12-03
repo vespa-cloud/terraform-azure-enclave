@@ -26,8 +26,4 @@ resource "azurerm_role_definition" "bastion_vm_connect_reader" {
       "Microsoft.Network/bastionHosts/read"
     ]
   }
-
-  assignable_scopes = [
-    data.azurerm_subscription.current.id,
-  ]
 }

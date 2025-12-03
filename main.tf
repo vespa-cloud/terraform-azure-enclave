@@ -64,8 +64,4 @@ resource "azurerm_role_definition" "archive_writer_no_delete" {
       "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/write"
     ]
   }
-
-  assignable_scopes = [
-    data.azurerm_subscription.current.id
-  ]
 }
