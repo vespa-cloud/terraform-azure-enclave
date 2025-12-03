@@ -16,7 +16,7 @@ locals {
   # This is used by github actions to tag releases. Bump whenever making non-trivial changes.
   # Documentation changes are NOT considered minor and should bump the version.
   # To skip tagging for truly minor changes, mark the PR with a 'no-tag' label or start the PR title with 'minor'.
-  template_version = "1.0.21"
+  template_version = "1.0.22"
 
   issuer_url = var.__zts_url
 
@@ -64,4 +64,8 @@ resource "azurerm_role_definition" "archive_writer_no_delete" {
       "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/write"
     ]
   }
+
+  assignable_scopes = [
+    data.azurerm_subscription.current.id
+  ]
 }
