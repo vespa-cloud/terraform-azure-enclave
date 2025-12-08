@@ -144,3 +144,17 @@ resource "azurerm_network_security_group" "bastion" {
     destination_port_range     = "80"
   }
 }
+
+resource "azurerm_role_assignment" "operator_bastion_reader" {
+  count              = var.enable_ssh ? 1 : 0
+  scope              = azurerm_resource_group.zone.id
+  role_definition_id = var.zone.enclave_infra.operator_role_definition_id
+  principal_id       = var.zone.enclave_infra.id_operator_principal_id
+}
+
+resource "azurerm_role_assignment" "operator_vm_login" {
+  count                = var.enable_ssh ? 1 : 0
+  scope                = azurerm_resource_group.zone.id
+  role_definition_name = "Virtual Machine Administrator Login"
+  principal_id         = var.zone.enclave_infra.id_operator_principal_id
+}
