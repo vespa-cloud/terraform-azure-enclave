@@ -6,6 +6,19 @@ resource "azurerm_user_assigned_identity" "id_operator" {
   resource_group_name = azurerm_resource_group.system.name
 }
 
+// Single federated credential for the vespa-operator Athenz service identity.
+// Operators obtain a JWT SVID for this service via the Athenz RBAC provider,
+// which checks membership in the azure.ssh-login role at token request time.
+resource "azurerm_federated_identity_credential" "operator_service" {
+  name                = "operator-service"
+  parent_id           = azurerm_user_assigned_identity.id_operator.id
+  resource_group_name = azurerm_resource_group.system.name
+  issuer              = local.issuer_url
+  audience            = ["${local.athenz_domain}:${local.athenz_operator_role}"]
+  subject             = "${local.athenz_domain}.vespa-operator"
+}
+
+// Deprecated: Per-user federated credentials. Use vespa-operator service identity instead.
 resource "azurerm_federated_identity_credential" "id_operator" {
   for_each            = toset(var.__operators)
   name                = "operator-${each.value}"
