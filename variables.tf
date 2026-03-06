@@ -23,10 +23,10 @@ variable "__zts_url" {
   default     = "https://zts.athenz.vespa-cloud.com:4443/zts/v1"
 }
 
-// Temporary array of user principals
-// TODO: Remove after deciding how to manage operator access.
+// Deprecated: Per-user operator principals. Use vespa-operator Athenz service identity instead.
+// Kept for backwards compatibility; will be removed in a future major version.
 variable "__operators" {
-  description = "Internal, do not override."
+  description = "Deprecated. Internal, do not override."
   type        = list(string)
   default     = []
 }
