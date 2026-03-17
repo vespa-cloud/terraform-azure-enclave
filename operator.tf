@@ -29,6 +29,18 @@ resource "azurerm_federated_identity_credential" "id_operator" {
   subject             = "user.${each.value}"
 }
 
+// Expose the id-operator client ID as a tag on the system resource group.
+// Uses azapi_update_resource to avoid a circular dependency (id_operator depends on system RG).
+resource "azapi_update_resource" "system_operator_tag" {
+  type        = "Microsoft.Resources/resourceGroups@2024-03-01"
+  resource_id = azurerm_resource_group.system.id
+  body = {
+    tags = {
+      vespa_operator_client_id = azurerm_user_assigned_identity.id_operator.client_id
+    }
+  }
+}
+
 resource "azurerm_role_definition" "bastion_vm_connect_reader" {
   name        = "vespa-operator-${data.azurerm_subscription.current.subscription_id}"
   scope       = data.azurerm_subscription.current.id
