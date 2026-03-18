@@ -32,6 +32,10 @@ resource "azurerm_resource_group" "system" {
   name     = "system"
   location = local.main_region
   tags     = merge(local.default_tags, { vespa_template_version = local.template_version })
+
+  lifecycle {
+    ignore_changes = [tags["vespa_operator_client_id"]]
+  }
 }
 
 // Uses the azapi provider to enable Encryption at Host feature for the subscription.
