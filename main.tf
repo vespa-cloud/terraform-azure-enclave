@@ -31,10 +31,11 @@ locals {
 resource "azurerm_resource_group" "system" {
   name     = "system"
   location = local.main_region
-  tags     = merge(local.default_tags, { vespa_template_version = local.template_version })
 
+  // Tags are managed by azapi_update_resource in operator.tf to avoid a
+  // circular dependency with id_operator (whose client_id is included as a tag).
   lifecycle {
-    ignore_changes = [tags["vespa_operator_client_id"]]
+    ignore_changes = [tags]
   }
 }
 

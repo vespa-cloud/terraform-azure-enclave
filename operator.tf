@@ -29,15 +29,17 @@ resource "azurerm_federated_identity_credential" "id_operator" {
   subject             = "user.${each.value}"
 }
 
-// Expose the id-operator client ID as a tag on the system resource group.
-// Uses azapi_update_resource to avoid a circular dependency (id_operator depends on system RG).
-resource "azapi_update_resource" "system_operator_tag" {
+// All system RG tags are managed here (not on the azurerm_resource_group) to avoid a
+// circular dependency: id_operator depends on the system RG, and we need id_operator's
+// client_id as a tag. The azurerm_resource_group uses ignore_changes = [tags].
+resource "azapi_update_resource" "system_rg_tags" {
   type        = "Microsoft.Resources/resourceGroups@2024-03-01"
   resource_id = azurerm_resource_group.system.id
   body = {
-    tags = {
+    tags = merge(local.default_tags, {
+      vespa_template_version   = local.template_version
       vespa_operator_client_id = azurerm_user_assigned_identity.id_operator.client_id
-    }
+    })
   }
 }
 
