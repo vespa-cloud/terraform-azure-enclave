@@ -16,7 +16,7 @@ locals {
   # This is used by github actions to tag releases. Bump whenever making non-trivial changes.
   # Documentation changes are NOT considered minor and should bump the version.
   # To skip tagging for truly minor changes, mark the PR with a 'no-tag' label or start the PR title with 'minor'.
-  template_version = "1.0.25"
+  template_version = "1.0.26"
 
   issuer_url = var.__zts_url
 
@@ -32,6 +32,10 @@ resource "azurerm_resource_group" "system" {
   name     = "system"
   location = local.main_region
   tags     = merge(local.default_tags, { vespa_template_version = local.template_version })
+
+  lifecycle {
+    ignore_changes = [tags["vespa_operator_client_id"]]
+  }
 }
 
 // Uses the azapi provider to enable Encryption at Host feature for the subscription.
