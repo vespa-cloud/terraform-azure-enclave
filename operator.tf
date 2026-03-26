@@ -18,17 +18,6 @@ resource "azurerm_federated_identity_credential" "operator_service" {
   subject             = "${local.athenz_domain}.vespa-operator"
 }
 
-// Deprecated: Per-user federated credentials. Use vespa-operator service identity instead.
-resource "azurerm_federated_identity_credential" "id_operator" {
-  for_each            = toset(var.__operators)
-  name                = "operator-${each.value}"
-  parent_id           = azurerm_user_assigned_identity.id_operator.id
-  resource_group_name = azurerm_resource_group.system.name
-  issuer              = local.issuer_url
-  audience            = ["${local.athenz_domain}:${local.athenz_operator_role}"]
-  subject             = "user.${each.value}"
-}
-
 // All system RG tags are managed here (not on the azurerm_resource_group) to avoid a
 // circular dependency: id_operator depends on the system RG, and we need id_operator's
 // client_id as a tag. The azurerm_resource_group uses ignore_changes = [tags].

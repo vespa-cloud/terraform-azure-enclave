@@ -23,10 +23,3 @@ variable "__zts_url" {
   default     = "https://zts.athenz.vespa-cloud.com:4443/zts/v1"
 }
 
-// Deprecated: Per-user operator principals. Use vespa-operator Athenz service identity instead.
-// Kept for backwards compatibility; will be removed in a future major version.
-variable "__operators" {
-  description = "Deprecated. Internal, do not override."
-  type        = list(string)
-  default     = []
-}
