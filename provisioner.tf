@@ -24,6 +24,8 @@ resource "azurerm_role_definition" "provisioner" {
   permissions {
     actions = [
       "Microsoft.Compute/diskEncryptionSets/read",
+      "Microsoft.Compute/disks/read",
+      "Microsoft.Compute/disks/write",
       "Microsoft.Compute/virtualMachines/read",
       "Microsoft.Network/networkInterfaces/read",
       "Microsoft.Compute/virtualMachines/write",
