@@ -31,6 +31,13 @@ resource "azurerm_storage_account" "archive" {
     versioning_enabled = false
   }
 
+  # Enforce SMB 3.1.1 for file shares (no file shares are used, this hardens the default).
+  share_properties {
+    smb {
+      versions = ["SMB3.1.1"]
+    }
+  }
+
   # System-assigned identity to provide key vault access
   identity {
     type = "SystemAssigned"
