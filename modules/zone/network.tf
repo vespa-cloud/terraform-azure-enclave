@@ -3,6 +3,8 @@ data "azurerm_location" "location" {
 }
 
 locals {
+  tenant_subnet_name = "subnet-tenant"
+
   // The logical zone ID, e.g. "1"
   logical_zone_id = [for zone_mapping in data.azurerm_location.location.zone_mappings :
   zone_mapping.logical_zone if zone_mapping.physical_zone == var.zone.physical_zone][0]
@@ -18,7 +20,7 @@ resource "azurerm_virtual_network" "zone" {
   }
 
   subnet {
-    name              = "subnet-tenant"
+    name              = local.tenant_subnet_name
     address_prefixes  = [local.tenant_network_ipv4, local.tenant_network_ipv6]
     service_endpoints = ["Microsoft.Storage"]
     security_group    = azurerm_network_security_group.main.id
@@ -59,7 +61,9 @@ resource "azurerm_nat_gateway_public_ip_association" "natgw" {
   public_ip_address_id = azurerm_public_ip.natgw.id
 }
 resource "azurerm_subnet_nat_gateway_association" "tenant" {
-  subnet_id      = one([for s in azurerm_virtual_network.zone.subnet : s.id if s.name == "subnet-tenant"])
+  // Subnet IDs are deterministic; constructed like in bastion.tf because the
+  // computed ids in the inline subnet blocks cannot be mocked in tofu test.
+  subnet_id      = "${azurerm_virtual_network.zone.id}/subnets/${local.tenant_subnet_name}"
   nat_gateway_id = azurerm_nat_gateway.natgw.id
 }
 
