@@ -33,7 +33,10 @@ jobs:
             exit 1
           }
 
+  smoke-test:
+    uses: vespa-engine/gh-actions/.github/workflows/tf-smoke-test.yml@main
+
   tag-release:
-    needs: validate-zones
+    needs: [validate-zones, smoke-test]
     uses: vespa-engine/gh-actions/.github/workflows/tf-tag-release.yml@main
     secrets: inherit
