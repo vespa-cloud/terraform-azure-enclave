@@ -4,7 +4,8 @@ terraform {
       source = "azure/azapi"
     }
     azurerm = {
-      source = "hashicorp/azurerm"
+      source  = "hashicorp/azurerm"
+      version = "~>4.1"
     }
   }
 }
@@ -16,7 +17,7 @@ locals {
   # This is used by github actions to tag releases. Bump whenever making non-trivial changes.
   # Documentation changes are NOT considered minor and should bump the version.
   # To skip tagging for truly minor changes, mark the PR with a 'no-tag' label or start the PR title with 'minor'.
-  template_version = "1.0.30"
+  template_version = "1.0.31"
 
   issuer_url = var.__zts_url
 
