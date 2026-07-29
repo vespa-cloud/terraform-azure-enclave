@@ -8,12 +8,11 @@ resource "azurerm_user_assigned_identity" "controller" {
 }
 
 resource "azurerm_federated_identity_credential" "controller" {
-  name                = "athenz"
-  resource_group_name = azurerm_resource_group.system.name
-  issuer              = local.issuer_url
-  audience            = ["api://AzureADTokenExchange"]
-  parent_id           = azurerm_user_assigned_identity.controller.id
-  subject             = "vespa.tenant.${var.tenant_name}.azure-${data.azurerm_subscription.current.subscription_id}:role.azure.controller"
+  name                      = "athenz"
+  issuer                    = local.issuer_url
+  audience                  = ["api://AzureADTokenExchange"]
+  user_assigned_identity_id = azurerm_user_assigned_identity.controller.id
+  subject                   = "vespa.tenant.${var.tenant_name}.azure-${data.azurerm_subscription.current.subscription_id}:role.azure.controller"
 }
 
 resource "azurerm_role_definition" "controller_archive" {
