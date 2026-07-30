@@ -2,6 +2,10 @@
 .terraform/
 .external_modules/
 
+# Provider dependency lock file. Only a root module's lock file is ever read, so
+# one committed in a published module would never reach consumers.
+.terraform.lock.hcl
+
 # .tfstate files
 *.tfstate
 *.tfstate.*

@@ -20,18 +20,24 @@ resource "azurerm_virtual_network" "zone" {
   }
 
   subnet {
-    name              = local.tenant_subnet_name
-    address_prefixes  = [local.tenant_network_ipv4, local.tenant_network_ipv6]
-    service_endpoints = ["Microsoft.Storage"]
-    security_group    = azurerm_network_security_group.main.id
+    name             = local.tenant_subnet_name
+    address_prefixes = [local.tenant_network_ipv4, local.tenant_network_ipv6]
+    security_group   = azurerm_network_security_group.main.id
+
+    service_endpoint {
+      service = "Microsoft.Storage"
+    }
   }
 
   subnet {
     #checkov:skip=CKV2_AZURE_31: Not needed (https://learn.microsoft.com/en-us/answers/questions/531182/nsg-required-for-bastion-subnet)
-    name              = local.bastion_subnet_name
-    address_prefixes  = [local.bastion_network_ipv4]
-    service_endpoints = ["Microsoft.Storage"]
-    security_group    = azurerm_network_security_group.bastion.id
+    name             = local.bastion_subnet_name
+    address_prefixes = [local.bastion_network_ipv4]
+    security_group   = azurerm_network_security_group.bastion.id
+
+    service_endpoint {
+      service = "Microsoft.Storage"
+    }
   }
 }
 

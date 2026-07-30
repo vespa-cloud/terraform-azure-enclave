@@ -32,8 +32,8 @@ the `modules/zone` submodule after the root module has been applied.
 
 ## Requirements
 - Terraform >= 1.3
-- AzureRM provider (hashicorp/azurerm)
-- AzAPI provider (azure/azapi)
+- AzureRM provider (hashicorp/azurerm) >= 5.0, < 6.0
+- AzAPI provider (azure/azapi) >= 2.7, < 3.0
 - Azure subscription where you have sufficient permissions to:
   - Create resource groups
   - Create user-assigned managed identities and federated credentials
@@ -42,6 +42,22 @@ the `modules/zone` submodule after the root module has been applied.
 
 Authentication: configure the AzureRM provider using any supported auth method (CLI, Managed Identity,
 Workload Identity, Service Principal). See https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs
+
+### Resource provider registration
+From azurerm 5.0 the provider no longer registers Azure resource providers automatically
+(`resource_provider_registrations` defaults to `none`, and `skip_provider_registration` was removed).
+If the resource providers this module needs are not already registered in your subscription, `apply`
+will fail. List them in your provider block as shown under Usage below, or set
+`resource_provider_registrations = "legacy"` to restore the old behaviour of registering roughly 60
+providers, which may fail on subscriptions with restricted permissions.
+
+This module needs `Microsoft.Compute`, `Microsoft.KeyVault`, `Microsoft.ManagedIdentity`,
+`Microsoft.Network` and `Microsoft.Storage`.
+
+### Location validation
+Also from azurerm 5.0, the `enhanced_validation` settings moved inside the provider's `features` block
+and default to disabled. An invalid `location` is therefore reported by Azure during `apply` rather
+than being caught during `plan`. To restore plan-time validation, set `features.enhanced_validation.locations = true`.
 
 ## Usage
 Minimal example (you must add at least one zone submodule):
@@ -54,20 +70,29 @@ provider "azurerm" {
 
   # Optional but recommended for Storage interactions in submodules
   storage_use_azuread = true
+
+  # Required from azurerm 5.0; safe to keep even if already registered
+  resource_providers_to_register = [
+    "Microsoft.Compute",
+    "Microsoft.KeyVault",
+    "Microsoft.ManagedIdentity",
+    "Microsoft.Network",
+    "Microsoft.Storage",
+  ]
 }
 provider "azapi" {}
 
 # Bootstrap your subscription for Vespa Cloud
 module "enclave" {
   source      = "vespa-cloud/enclave/azure"
-  version     = ">= 1.0.0, < 2.0.0"
+  version     = ">= 1.1.0, < 2.0.0"
   tenant_name = "<YOUR-VESPA-TENANT-NAME>"
 }
 
 # Create one Vespa Cloud zone (VNet, subnets, bastion, storage, etc.)
 module "zone_dev_azure_eastus_az1" {
   source  = "vespa-cloud/enclave/azure//modules/zone"
-  version = ">= 1.0.0, < 2.0.0"
+  version = ">= 1.1.0, < 2.0.0"
   zone    = module.enclave.zones.dev.azure_eastus_az1
 
   # Allow Vespa Cloud operators to SSH into the provisioned VMs for troubleshooting.
@@ -143,7 +168,10 @@ Option B (least‑privilege):
 
 ## Versioning
 This module follows semantic versioning. Pin a compatible version range when consuming the module, for example:
-`>= 1.0.0, < 2.0.0`.
+`>= 1.1.0, < 2.0.0`.
+
+Note that module versions 1.1.0 and later require the azurerm 5.x provider, while earlier 1.0.x
+versions require azurerm 4.x.
 
 ## Examples
 - Basic: ./examples/basic

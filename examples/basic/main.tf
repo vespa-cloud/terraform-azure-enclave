@@ -21,6 +21,17 @@ provider "azurerm" {
   # Ensure the principal running Terraform has appropriate RBAC on the storage account
   # (typically Storage Account Contributor at the account scope).
   storage_use_azuread = true
+
+  # From azurerm 5.0 no resource providers are registered automatically.
+  # These are the ones this module needs. Registration is idempotent, so the
+  # list is safe to keep even if they are already registered.
+  resource_providers_to_register = [
+    "Microsoft.Compute",
+    "Microsoft.KeyVault",
+    "Microsoft.ManagedIdentity",
+    "Microsoft.Network",
+    "Microsoft.Storage",
+  ]
 }
 
 provider "azapi" {}
@@ -31,7 +42,7 @@ provider "azapi" {}
 #
 module "enclave" {
   source      = "vespa-cloud/enclave/azure"
-  version     = ">= 1.0.0, < 2.0.0"
+  version     = ">= 1.1.0, < 2.0.0"
   tenant_name = "<YOUR-VESPA-TENANT-NAME>"
 }
 
@@ -40,7 +51,7 @@ module "enclave" {
 #
 module "zone_dev_azure_eastus_az1" {
   source  = "vespa-cloud/enclave/azure//modules/zone"
-  version = ">= 1.0.0, < 2.0.0"
+  version = ">= 1.1.0, < 2.0.0"
   zone    = module.enclave.zones.dev.azure_eastus_az1
 
   # Allow Vespa Cloud operators to SSH into the provisioned VMs for troubleshooting.

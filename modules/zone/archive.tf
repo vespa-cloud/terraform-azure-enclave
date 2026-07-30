@@ -172,8 +172,8 @@ resource "azurerm_role_assignment" "id_tenant_archive_writer" {
 # Attach key to storage account (CMK)
 resource "azurerm_storage_account_customer_managed_key" "archive_customer_managed_key" {
   storage_account_id = azurerm_storage_account.archive.id
-  key_vault_id       = azurerm_key_vault.archive.id
-  key_name           = azurerm_key_vault_key.archive.name
+  // Versionless, so that automatic key rotation is picked up.
+  key_vault_key_id = azurerm_key_vault_key.archive.versionless_id
   depends_on = [
     azurerm_role_assignment.archive_storage_encryption_user
   ]
